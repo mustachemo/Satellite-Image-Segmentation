@@ -4,46 +4,66 @@ import matplotlib.patches as patches
 from PIL import Image, ImageDraw
 from pathlib import Path
 
-print(Path.cwd())
+def load_image_and_mask(image_index):
+    """
+    Load image and mask based on the image index.
+    """
+    image_path = Path(r'data/images/val') / f'img_resize_{image_index}.png'
+    mask_path = Path(r'data/mask/val') / f'img_resize_{image_index}_mask.png'
 
-# Load an example image and its mask
-image_index = 'img_resize_404'
-image_path = Path(r'data/images/val') / f'{image_index}.png'
-mask_path = Path(r'data/mask/val') / f'{image_index}.png'
-# Load the image and mask
-try:
-    image = Image.open(image_path)
-    mask = Image.open(mask_path)
-except FileNotFoundError as e:
-    print(f"File not found: {e}")
-    exit()
+    try:
+        image = Image.open(image_path)
+        mask = Image.open(mask_path)
+    except FileNotFoundError as e:
+        print(f"File not found: {e}")
+        exit()
 
-# Load bounding boxes from all_bbox.txt
-try:
-    with open(r'data\all_bbox.txt') as f:
-        bboxes = json.load(f)
-except FileNotFoundError as e:
-    print(f"File not found: {e}")
-    exit()
+    return image, mask
 
-# Get bounding boxes for the current image
-image_bboxes = bboxes.get(image_index, [])
+def load_bboxes():
+    """
+    Load bounding boxes from all_bbox.txt.
+    """
+    try:
+        with open(r'data\all_bbox.txt') as f:
+            bboxes = json.load(f)
+    except FileNotFoundError as e:
+        print(f"File not found: {e}")
+        exit()
 
-# Create a figure and axis
-fig, ax = plt.subplots(1, 2, figsize=(15, 7))
+    return bboxes
 
-# Display the image and mask
-ax[0].imshow(image)
-ax[0].set_title('Image')
+def draw_bboxes_on_image(image, bboxes):
+    """
+    Draw bounding boxes on the image.
+    """
+    draw = ImageDraw.Draw(image)
+    for bbox in bboxes:
+        draw.rectangle([bbox[2], bbox[3], bbox[0], bbox[1]], outline='yellow', width=3)
 
-ax[1].imshow(mask)
-ax[1].set_title('Mask')
+    return image
 
-# Draw bounding boxes on the image
-draw = ImageDraw.Draw(image)
-for bbox in image_bboxes:
-    draw.rectangle([bbox[2], bbox[3], bbox[0], bbox[1]], outline='yellow', width=3)
+def visualize(image_index):
+    """
+    Visualize image, mask and bounding boxes.
+    """
+    image, mask = load_image_and_mask(image_index)
+    bboxes = load_bboxes()
+    image_bboxes = bboxes.get(image_index, [])
 
-ax[0].imshow(image)
+    # Create a figure and axis
+    fig, ax = plt.subplots(1, 2, figsize=(15, 7))
 
-plt.show()
+    # Display the image and mask
+    ax[0].imshow(image)
+    ax[0].set_title('Image + Bounding Box')
+
+    ax[1].imshow(mask)
+    ax[1].set_title('Mask')
+
+    # Draw bounding boxes on the image
+    image = draw_bboxes_on_image(image, image_bboxes)
+
+    ax[0].imshow(image)
+
+    plt.show()

@@ -41,10 +41,7 @@ python experiments.py
 
 ## Dataset
 
-<p float="left">
-  <img src="data\images\val\img_resize_406.png" width="300" />
-  <img src="data\mask\val\img_resize_406_mask.png" width="300" /> 
-</p>
+![Example sample](figure1.jpg)
 
 A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
 
