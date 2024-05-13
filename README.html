@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Turion Space assessment</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="turion-space-assessment">Turion Space assessment</h1>
+<p>This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to object detection tasks. The goal is to leverage dropout layers and multiple stochastic forward passes to measure prediction uncertainty.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#turion-space-assessment">Turion Space assessment</a>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#dataset">Dataset</a></li>
+<li><a href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>Uncertainty quantification is crucial in critical applications like space object detection. This project aims to implement techniques to measure uncertainty in object detection models using dropout layers.</p>
+<h2 id="installation">Installation</h2>
+<p>Clone the repository:</p>
+<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/your-username/uncertainty-quantification-object-detection.git
+<span class="hljs-built_in">cd</span> uncertainty-quantification-object-detection
+</code></pre>
+<p>Install the dependencies:</p>
+<pre><code class="language-bash">pip install -r requirements.txt
+</code></pre>
+<h2 id="usage">Usage</h2>
+<p>Run the experiments:</p>
+<pre><code class="language-bash">python experiments.py
+</code></pre>
+<h2 id="dataset">Dataset</h2>
+<p float="left">
+  <img src="file:///c:\Users\mhasa\Desktop\Turion-Space-assessment\data\images\val\img_resize_406.png" width="300" />
+  <img src="file:///c:\Users\mhasa\Desktop\Turion-Space-assessment\data\mask\val\img_resize_406_mask.png" width="300" /> 
+</p>
+<p>A satellite dataset for object detection and segmentation using both synthesis and real satellite images.</p>
+<p>Link to paper: <a href="https://arxiv.org/abs/2106.08186">A Spacecraft Dataset for Detection, Segmentation and Parts Recognition</a></p>
+<p>Link to the dataset: <a href="https://github.com/Yurushia1998/SatelliteDataset">https://github.com/Yurushia1998/SatelliteDataset</a></p>
+<p>#A satellite dataset for object detection and segmentation using both synthesis and real satellite images.</p>
+<p>#This dataset include 3116 images, mask with size 1280x720 and bounding boxes of both synthesis and real satellite images. Each satellite is segmented into at most 3 parts, including body, solar panel and antena by respectively 3 color: green,red,blue.</p>
+<p>#Image with index 0-1002 has fine mask while images from index 1003-3116 has coarse masks.
+The datasets is divided into 2 parts: train data including 403 fine mask from index 0-402 and 2114 coarse mask from index 1003-3116. The val dataset includes 600 images with fine mask indexed from 403 to 1002.</p>
+<p>#File all_bbox.txt include bounding boxes of all satellites inside datasets based on segmentation masks in form of a dictionary with index of images as key. Each bounding boxes has format [max_x,max_y,min_x,min_y].</p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>This project is inspired by the work of <a href="http://www.cs.ox.ac.uk/people/yarin.gal/website/index.html">Yarin Gal</a>
+and <a href="https://www.sciencedirect.com/science/article/pii/S1566253521001081">A review of uncertainty quantification in deep learning: Techniques, applications and challenges</a>.</p>
+<p>For the Turion Space assessment, I have implemented the following experiments:</p>
+<ul class="contains-task-list">
+<li class="task-list-item enabled"><input class="task-list-item-checkbox" checked=""type="checkbox"> Dropout layers in object detection models</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> Monte Carlo dropout</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> Ensemble methods</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> Bayesian neural networks</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> Calibration metrics</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> Evaluation on SpaceNet dataset</li>
+<li class="task-list-item enabled"><input class="task-list-item-checkbox"type="checkbox"> Report</li>
+</ul>
+
+            
+            
+        </body>
+        </html>

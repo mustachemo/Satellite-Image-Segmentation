@@ -9,7 +9,7 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Introduction](#introduction)
   - [Installation](#installation)
   - [Usage](#usage)
-  - [Datasets](#datasets)
+  - [Dataset](#dataset)
   - [Acknowledgements](#acknowledgements)
 
 ## Introduction
@@ -39,7 +39,12 @@ Run the experiments:
 python experiments.py
 ```
 
-## Datasets
+## Dataset
+
+<p float="left">
+  <img src="data\images\val\img_resize_406.png" width="300" />
+  <img src="data\mask\val\img_resize_406_mask.png" width="300" /> 
+</p>
 
 A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
 
@@ -47,11 +52,14 @@ Link to paper: [A Spacecraft Dataset for Detection, Segmentation and Parts Recog
 
 Link to the dataset: https://github.com/Yurushia1998/SatelliteDataset
 
----
+#A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
 
-The experiments are conducted on the [SpaceNet](https://spacenetchallenge.github.io/) dataset.
+#This dataset include 3116 images, mask with size 1280x720 and bounding boxes of both synthesis and real satellite images. Each satellite is segmented into at most 3 parts, including body, solar panel and antena by respectively 3 color: green,red,blue.
 
-https://universe.roboflow.com/neo-dmsux/neo-v6wzn/dataset/2
+#Image with index 0-1002 has fine mask while images from index 1003-3116 has coarse masks.
+The datasets is divided into 2 parts: train data including 403 fine mask from index 0-402 and 2114 coarse mask from index 1003-3116. The val dataset includes 600 images with fine mask indexed from 403 to 1002.
+
+#File all_bbox.txt include bounding boxes of all satellites inside datasets based on segmentation masks in form of a dictionary with index of images as key. Each bounding boxes has format [max_x,max_y,min_x,min_y].
 
 ## Acknowledgements
 
