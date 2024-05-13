@@ -41,7 +41,17 @@ python experiments.py
 
 ## Datasets
 
+A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
+
+Link to paper: [A Spacecraft Dataset for Detection, Segmentation and Parts Recognition](https://arxiv.org/abs/2106.08186)
+
+Link to the dataset: https://github.com/Yurushia1998/SatelliteDataset
+
+---
+
 The experiments are conducted on the [SpaceNet](https://spacenetchallenge.github.io/) dataset.
+
+https://universe.roboflow.com/neo-dmsux/neo-v6wzn/dataset/2
 
 ## Acknowledgements
 
