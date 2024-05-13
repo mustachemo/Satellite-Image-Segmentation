@@ -9,7 +9,10 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Introduction](#introduction)
   - [Installation](#installation)
   - [Usage](#usage)
-  - [Dataset](#dataset)
+- [Satellite Dataset](#satellite-dataset)
+  - [Dataset Details](#dataset-details)
+  - [Bounding Boxes](#bounding-boxes)
+  - [Additional Resources](#additional-resources)
   - [Acknowledgements](#acknowledgements)
 
 ## Introduction
@@ -39,24 +42,27 @@ Run the experiments:
 python experiments.py
 ```
 
-## Dataset
+# Satellite Dataset
+
+This repository contains a satellite dataset for object detection and segmentation using both synthetic and real satellite images. The dataset includes 3116 images, masks with size 1280x720, and bounding boxes of both synthetic and real satellite images. Each satellite is segmented into at most 3 parts, including body, solar panel, and antenna, represented by three colors: green, red, and blue.
 
 ![Example sample](figure1.png)
 
-A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
+### Dataset Details
 
-Link to paper: [A Spacecraft Dataset for Detection, Segmentation and Parts Recognition](https://arxiv.org/abs/2106.08186)
+- Images with index 0-1002 have fine masks, while images from index 1003-3116 have coarse masks.
+- The dataset is divided into two parts:
+  - Training data includes 403 fine masks from index 0-402 and 2114 coarse masks from index 1003-3116.
+  - The validation dataset includes 600 images with fine masks indexed from 403 to 1002.
 
-Link to the dataset: https://github.com/Yurushia1998/SatelliteDataset
+### Bounding Boxes
 
-#A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
+The file `all_bbox.txt` includes bounding boxes of all satellites inside the dataset based on segmentation masks. It's in the form of a dictionary with the index of images as the key. Each bounding box has the format [max_x, max_y, min_x, min_y].
 
-#This dataset include 3116 images, mask with size 1280x720 and bounding boxes of both synthesis and real satellite images. Each satellite is segmented into at most 3 parts, including body, solar panel and antena by respectively 3 color: green,red,blue.
+### Additional Resources
 
-#Image with index 0-1002 has fine mask while images from index 1003-3116 has coarse masks.
-The datasets is divided into 2 parts: train data including 403 fine mask from index 0-402 and 2114 coarse mask from index 1003-3116. The val dataset includes 600 images with fine mask indexed from 403 to 1002.
-
-#File all_bbox.txt include bounding boxes of all satellites inside datasets based on segmentation masks in form of a dictionary with index of images as key. Each bounding boxes has format [max_x,max_y,min_x,min_y].
+- Link to the paper: [A Spacecraft Dataset for Detection, Segmentation and Parts Recognition](https://arxiv.org/abs/2106.08186)
+- Link to the dataset: [https://github.com/Yurushia1998/SatelliteDataset](https://github.com/Yurushia1998/SatelliteDataset)
 
 ## Acknowledgements
 
@@ -65,7 +71,7 @@ and [A review of uncertainty quantification in deep learning: Techniques, applic
 
 For the Turion Space assessment, I have implemented the following experiments:
 
-- [x] Dropout layers in object detection models
+- [ ] Dropout layers in object detection models
 - [ ] Monte Carlo dropout
 - [ ] Ensemble methods
 - [ ] Bayesian neural networks

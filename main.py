@@ -1,4 +1,4 @@
-from utils.visualize_bbox import visualize
+from utils.visualize_sample import visualize
 
 def main():
     visualize('404')
