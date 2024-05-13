@@ -41,7 +41,7 @@ python experiments.py
 
 ## Dataset
 
-![Example sample](figure1.jpg)
+![Example sample](figure1.png)
 
 A satellite dataset for object detection and segmentation using both synthesis and real satellite images.
 
