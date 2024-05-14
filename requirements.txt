@@ -5,3 +5,4 @@ tensorflow==2.10.1
 pillow==10.3.0
 matplotlib==3.8.4
 numpy==1.22.0
+tqdm==4.66.4

@@ -5,43 +5,43 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 import json
+from tqdm import tqdm
 
-target_shape = (224, 224)
-image_dir = Path('data/images/train')
-annotation_file = Path('data/all_bbox.txt')
 
-datagen = ImageDataGenerator(rescale=1./255)
+image_dir = Path(r'../data/images/train')
+annotation_file = Path(r'../data/all_bbox.txt')
 
-def load_and_resize_image(image_path):
-    image = Image.open(image_path).resize(target_shape)
-    image = np.array(image) / 255.0  # Rescale manually
-    return image
+print(f"Image directory: {image_dir}")
+image_paths = list(image_dir.glob('*.png'))
+print(f"Number of images found: {len(image_paths)}")
+
+
+
 
 # Load your training images
 train_images = []
 image_indices = []
-for image_path in image_dir.glob('*.png'):  # Adjust the file extension as needed
+for image_path in tqdm(image_paths):  # Adjust the file extension as needed
     image = Image.open(image_path).convert('RGB')
-    image = image.resize(target_shape)
     image = np.array(image)
     image_indices.append(image_path.stem) # Extract the image index
     train_images.append(image)
 train_images = np.array(train_images, dtype="object")
 
 # Load your training bounding box annotations
-with open(r'all_bbox.txt', 'r') as f:
+with open(annotation_file, 'r') as f:
     all_bboxes = json.load(f)
 
 # Match bounding boxes with images
 train_annotations = []
-for idx in image_indices:
+for idx in tqdm(image_indices):
     if idx in all_bboxes:
         bboxes = all_bboxes[idx]
         train_annotations.append(bboxes)
     else:
         train_annotations.append([])  # Handle missing annotations
 
-# Convert bounding boxes to numpy array and normalize
+# Normalize bounding boxes
 def normalize_bboxes(bboxes, img_width, img_height):
     normalized_bboxes = []
     for bbox in bboxes:
@@ -53,11 +53,13 @@ def normalize_bboxes(bboxes, img_width, img_height):
         normalized_bboxes.append([xmin, ymin, xmax, ymax])
     return normalized_bboxes
 
-img_width, img_height = target_shape
+# Get the dimensions of the first image
+img_width, img_height = train_images[0].shape[1], train_images[0].shape[0]
+
+# Normalize the bounding boxes for all images
 train_annotations = [normalize_bboxes(bboxes, img_width, img_height) for bboxes in train_annotations]
 train_annotations = np.array(train_annotations, dtype=object)
 
 # Check shapes of the training data
-print(train_images.shape)  # (num_images, height, width, channels)
-print(len(train_annotations))  # Should match the number of images
-
+print("Shape of train_images:", train_images.shape)  # (num_images, height, width, channels)
+print("Number of annotations:", len(train_annotations))  # Should match the number of images
