@@ -1,4 +1,4 @@
-from utils.visualize_sample import visualize
+from utils.visualize import visualize
 
 def main():
     visualize('404')

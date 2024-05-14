@@ -67,3 +67,31 @@ def visualize(image_index):
     ax[0].imshow(image)
 
     plt.show()
+
+def visualize_train_sample(train_images, train_masks):
+    """
+    Visualize a sample image, mask and bounding boxes.
+    """
+    fig, ax = plt.subplots(1, 2, figsize=(15, 7))
+
+    ax[0].imshow(train_images)
+    ax[0].set_title('Image')
+    ax[1].imshow(train_masks, cmap='gray')
+    ax[1].set_title('Mask')
+
+    plt.show()
+
+def visualize_test_sample(test_images, test_masks, predictions):
+    """
+    Visualize a sample image, mask and prediction.
+    """
+    fig, ax = plt.subplots(1, 3, figsize=(15, 7))
+
+    ax[0].imshow(test_images)
+    ax[0].set_title('Image')
+    ax[1].imshow(test_masks, cmap='gray')
+    ax[1].set_title('Mask')
+    ax[2].imshow(predictions, cmap='gray')
+    ax[2].set_title('Predicted Mask')
+
+    plt.show()

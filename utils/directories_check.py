@@ -10,8 +10,8 @@ def check_dirs():
         os.mkdir(os.path.join('.', 'data'))
     if not os.path.exists(os.path.join('.', 'prepped_data')):
         os.mkdir(os.path.join('.', 'prepped_data'))
-    if not os.path.exists(os.path.join('.', 'models')):
-        os.mkdir(os.path.join('.', 'models'))
+    if not os.path.exists(os.path.join('.', 'model')):
+        os.mkdir(os.path.join('.', 'model'))
     if not os.path.exists(os.path.join('.', 'logs')):
         os.mkdir(os.path.join('.', 'logs'))
 
