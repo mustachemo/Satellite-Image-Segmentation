@@ -148,6 +148,7 @@ cython_debug/
 data/*
 dataset/*
 temp_data/*
+prepped_data/*
 
 # models
 checkpoints/*

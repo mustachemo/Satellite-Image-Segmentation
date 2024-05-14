@@ -1,10 +1,19 @@
 from tensorflow.keras.models import load_model
+from utils.data_loader_unet import check_dirs, check_prepped_data
+import tensorflow as tf
+import numpy as np
 import logging
 import matplotlib.pyplot as plt
-from utils.data_loader_unet import test_images, test_masks
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+
+    check_dirs()
+    check_prepped_data()
+
+    # Load th
+    test_images = tf.convert_to_tensor(np.load(prepped_test_images))
+    test_masks = tf.convert_to_tensor(np.load(prepped_test_masks))
 
     # Load the model
     try: 
