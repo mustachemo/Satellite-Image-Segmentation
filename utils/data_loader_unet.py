@@ -7,72 +7,54 @@ from tqdm import tqdm
 
 # Directory paths
 train_images_dir = './data/images/train'
-test_images_dir = './data/images/val'
 train_masks_dir = './data/mask/train'
+test_images_dir = './data/images/val'
 test_masks_dir = './data/mask/val'
 
-# Get all file names
-train_image_files = os.listdir(train_images_dir)
-train_mask_files = os.listdir(train_masks_dir)
-test_image_files = os.listdir(test_images_dir)
-test_mask_files = os.listdir(test_masks_dir)
+# Sort files
+train_image_files = sorted(os.listdir(train_images_dir))
+train_mask_files = sorted(os.listdir(train_masks_dir))
+test_image_files = sorted(os.listdir(test_images_dir))
+test_mask_files = sorted(os.listdir(test_masks_dir))
+
+def load_and_process_files(image_dir, mask_dir, image_files, mask_files):
+    images = []
+    masks = []
+    for i in tqdm(range(3117), desc='Prepping images'):
+        # File correspondence check
+        file_name = f'img_resize_{i}'
+
+        # Load images
+        image_path = os.path.join(image_dir, f'{file_name}.png')
+        mask_path = os.path.join(mask_dir, f'{file_name}_mask.png')
+
+        try:
+            image = load_img(image_path, color_mode='rgb', target_size=(256, 256))
+            mask = load_img(mask_path, color_mode='grayscale', target_size=(256, 256))
+        except Exception as e:
+            print(f'image: {image_path} mask: {mask_path} not found, continuing...')
+            continue
 
 
-train_images = []
-train_masks = []
-test_images = []
-test_masks = []
+        # Convert to array and normalize
+        image = img_to_array(image) / 255.0
+        mask = img_to_array(mask) / 255.0
 
-print('Converting images and masks to numpy arrays...')
-for image_file, mask_file in tqdm(zip(train_image_files, train_mask_files)):
+        # Convert to tensors
+        image = tf.convert_to_tensor(image, dtype=tf.float32)
+        mask = tf.convert_to_tensor(mask, dtype=tf.float32)
 
-    image = load_img(os.path.join(train_images_dir, image_file))
-    mask = load_img(os.path.join(train_masks_dir, mask_file), color_mode='grayscale')
-
-
-    target_size = (256, 256)
-    image = image.resize(target_size)
-    mask = mask.resize(target_size)
-
-     # Convert to numpy array and normalize to 0-1
-    image = img_to_array(image) / 255.0
-    mask = img_to_array(mask) / 255.0
-
-    image = tf.convert_to_tensor(image, dtype=tf.float32)
-    mask = tf.convert_to_tensor(mask, dtype=tf.float32)
-
-
-
-    # Append to lists
-    train_images.append(image)
-    train_masks.append(mask)
-
-print('Converting test images and masks to numpy arrays...')
-for image_file, mask_file in tqdm(zip(test_image_files, test_mask_files)):
-
-    image = load_img(os.path.join(test_images_dir, image_file))
-    mask = load_img(os.path.join(test_masks_dir, mask_file), color_mode='grayscale')
-
-    target_size = (256, 256)
-    image = image.resize(target_size)
-    mask = mask.resize(target_size)
-
-    # Convert to numpy array and normalize to 0-1
-    image = img_to_array(image) / 255.0
-    mask = img_to_array(mask) / 255.0
+        # Append to lists
+        images.append(image)
+        masks.append(mask)
     
-    image = tf.convert_to_tensor(image, dtype=tf.float32)
-    mask = tf.convert_to_tensor(mask, dtype=tf.float32)
+    return np.array(images), np.array(masks)
 
-
-
-    # Append to lists
-    test_images.append(image)
-    test_masks.append(mask)
-
-
-# Convert lists to numpy arrays
-train_images = np.array(train_images)
-train_masks = np.array(train_masks)
-test_images = np.array(test_images)
-test_masks = np.array(test_masks)
+# Process training and testing data
+train_images, train_masks = load_and_process_files(train_images_dir, train_masks_dir, train_image_files, train_mask_files)
+test_images, test_masks = load_and_process_files(test_images_dir, test_masks_dir, test_image_files, test_mask_files)
+# print the shapes of the images and masks
+print(f'Train images shape: {train_images.shape}')
+print(f'Train masks shape: {train_masks.shape}')
+print(f'Test images shape: {test_images.shape}')
+print(f'Test masks shape: {test_masks.shape}')
