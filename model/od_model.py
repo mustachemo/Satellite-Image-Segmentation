@@ -67,6 +67,5 @@ def od_loss(y_true, y_pred):
 model = build_model()
 # model.compile(optimizer='adam', loss=od_loss)
 model.compile(optimizer='adam',
-              loss={'regression_head': 'mean_squared_error', 'classifier_head': 'binary_crossentropy'},
-              loss_weights=[1, 1],
-              metrics={'regression_head': 'mean_squared_error', 'classifier_head': 'binary_crossentropy'})
+              loss={'regression_head': 'mse', 'classifier_head': 'binary_crossentropy'},
+              metrics={'regression_head': 'mse', 'classifier_head': 'accuracy'})
