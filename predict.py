@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     # Use F1 score to evaluate the model
     logger.info('Evaluating model')
-    loss, accuracy, dice_coefficient = model.evaluate(test_images, test_masks)
-    logger.info(f'F1 score: {f1_score}')
+    loss, accuracy, dice_coefficient_metric = model.evaluate(test_images, test_masks)
+    logger.info(f'Loss: {loss}, Accuracy: {accuracy}, Dice Coefficient: {dice_coefficient_metric}')
     
     logger.info('Predictions complete')
