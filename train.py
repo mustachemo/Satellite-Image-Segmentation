@@ -17,17 +17,16 @@ from configs import prepped_train_images, prepped_train_masks, prepped_test_imag
 
 if __name__ == '__main__':
 
+    check_dirs()
+    check_prepped_data()
     logger = get_logger(__name__)
-    
+
     gpu = tf.config.experimental.list_physical_devices('GPU')
 
     if not gpu:
         logger.warning('No GPU found, model may be slow or fail to train')
     else:
         logger.info(f'GPU found!')
-
-    check_dirs()
-    check_prepped_data()
 
     # Load the prepped data
     train_images = tf.convert_to_tensor(np.load(prepped_train_images))
@@ -41,9 +40,8 @@ if __name__ == '__main__':
         logger.info('Model already exists, use predict.py to make predictions')
     else:
         logger.info('Model not found, creating and training...')
-        model = build_unet_model()
+        model = build_unet_model(dropout_rate=0.5)
         model.compile(optimizer='adam', loss=combined_loss, metrics=['accuracy', dice_coefficient])
-
 
         # Callbacks
         checkpoint = ModelCheckpoint('checkpoints/unet_model.h5', monitor='val_loss', save_best_only=True, mode='min')

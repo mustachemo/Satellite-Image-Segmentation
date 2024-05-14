@@ -10,10 +10,9 @@ from configs import prepped_test_images, prepped_test_masks
 
 if __name__ == '__main__':
 
-    logger = get_logger(__name__)
-
     check_dirs()
     check_prepped_data()
+    logger = get_logger(__name__)
 
     # Load the model
     try: 
@@ -33,3 +32,10 @@ if __name__ == '__main__':
 
     for i in range(10):
         visualize_test_sample(test_images[i], test_masks[i], predictions[i])
+
+    # Use F1 score to evaluate the model
+    logger.info('Evaluating model')
+    loss, accuracy, dice_coefficient = model.evaluate(test_images, test_masks)
+    logger.info(f'F1 score: {f1_score}')
+    
+    logger.info('Predictions complete')

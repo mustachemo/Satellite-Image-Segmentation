@@ -34,7 +34,7 @@ dictConfig({
             'class': 'logging.handlers.RotatingFileHandler',
             'level': 'DEBUG',
             'formatter': 'detailed',
-            'filename': 'logs/ml.log',
+            'filename': 'ml.log',
             'maxBytes': 1024*1024*5,
             'backupCount': 10,
             'encoding': 'utf8',
