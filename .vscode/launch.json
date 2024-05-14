@@ -2,10 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug train.py",
+      "name": "train",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/train.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "predict",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/predict.py",
       "console": "integratedTerminal"
     }
   ]

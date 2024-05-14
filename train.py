@@ -4,7 +4,22 @@ from pathlib import Path
 import logging
 import tensorflow as tf
 from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, TensorBoard, CSVLogger
+from tensorflow.keras.metrics import MeanIoU
 import matplotlib.pyplot as plt
+
+def dice_coefficient(y_true, y_pred, smooth=1e-6):
+    # Flatten the tensors to keep consistency
+    y_true_f = tf.reshape(y_true, [-1])
+    y_pred_f = tf.reshape(y_pred, [-1])
+    
+    # Calculate intersection and union
+    intersection = tf.reduce_sum(y_true_f * y_pred_f)
+    union = tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f)
+    
+    # Calculate the Dice coefficient
+    dice = (2. * intersection + smooth) / (union + smooth)
+    
+    return dice
 
 
 if __name__ == '__main__':
@@ -15,27 +30,35 @@ if __name__ == '__main__':
     else:
         logging.info(f'GPU found!')
 
+    # Print an image and mask on the same plot
+    fig, ax = plt.subplots(1, 2, figsize=(15, 7))
+
+    # Display the image and mask
+    for i in range(50):
+        ax[0].imshow(train_images[i])
+        ax[0].set_title('Image')
+
+        ax[1].imshow(train_masks[i], cmap='gray')
+        ax[1].set_title('Mask')
+
+
+        plt.show()
     
     model = build_unet_model()
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', MeanIoU(num_classes=2, name='iou'), dice_coefficient])
+
 
     # Callbacks
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=0.001)
-    checkpoint = ModelCheckpoint('checkpoints/unet_model.h5', save_best_only=True)
+    # reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=0.001)
+    checkpoint = ModelCheckpoint('checkpoints/unet_model.h5', monitor='val_loss', save_best_only=True, mode='min')
     tensorboard = TensorBoard(log_dir='logs')
     csv_logger = CSVLogger('logs/training.log')
 
     # Train the model
-    model.fit(train_images, train_masks, epochs=5, batch_size=1, validation_data=(test_images, test_masks), callbacks=[reduce_lr, checkpoint, tensorboard, csv_logger])
+    model.fit(train_images, train_masks, epochs=5, batch_size=1, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
     logging.info('Training complete')
 
-    # Predict and show results
-    logging.info('Predicting test images')
-    predictions = model.predict(test_images)
-    for i in range(5):
-        plt.imshow(test_images[i])
-        plt.imshow(predictions[i])
-        plt.show()
+
 
 
 
