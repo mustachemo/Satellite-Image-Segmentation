@@ -1,37 +1,58 @@
-import logging.config
+import logging
+from logging.config import dictConfig
 
-# Logger Configuration Dictionary
-LOGGING_CONFIG = {
+class ContextFilter(logging.Filter):
+    def filter(self, record):
+        record.module_name = __name__
+        return True
+
+dictConfig({
     'version': 1,
-    'disable_existing_loggers': False,
+    'filters': {
+        'context_filter': {
+            '()': ContextFilter,
+        },
+    },
     'formatters': {
-        'standard': {
-            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        'detailed': {
+            'format': '%(asctime)s - %(name)s - [%(levelname)s] -- %(message)s -- (%(filename)s:%(lineno)d, %(funcName)s)',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(levelname)s - %(message)s',
         },
     },
     'handlers': {
-        'default': {
-            'level': 'INFO',
-            'formatter': 'standard',
+        'console': {
             'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',  # Use standard output
-        },
-        'file_handler': {
             'level': 'DEBUG',
-            'formatter': 'standard',
-            'class': 'logging.FileHandler',
-            'filename': 'model_debug.log',  # Path to log file
-            'mode': 'a',  # Append mode
+            'formatter': 'simple',
+            'stream': 'ext://sys.stdout',
+            'filters': ['context_filter'],
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'formatter': 'detailed',
+            'filename': 'logs/ml.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 10,
+            'encoding': 'utf8',
+            'filters': ['context_filter'],
         },
     },
     'loggers': {
-        '': {  # root logger
-            'handlers': ['default', 'file_handler'],
+        'my_module': {
             'level': 'DEBUG',
-            'propagate': True
+            'handlers': ['console', 'file'],
+            'propagate': False
         },
-    }
-}
+    },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['console', 'file']
+    },
+})
 
-def setup_logging():
-    logging.config.dictConfig(LOGGING_CONFIG)
+def get_logger(name):
+    return logging.getLogger(name)

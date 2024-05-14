@@ -13,4 +13,4 @@ def dice_loss(y_true, y_pred):
 def combined_loss(y_true, y_pred):
     dice = dice_loss(y_true, y_pred)
     bce = tf.keras.losses.binary_crossentropy(y_true, y_pred)
-    return 0.5 * dice + 0.5 * bce
+    return dice + bce

@@ -2,7 +2,6 @@ import os
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.image import rgb_to_grayscale
 from tqdm import tqdm
 
 def load_and_process_files(image_dir, mask_dir, prefix='train'):

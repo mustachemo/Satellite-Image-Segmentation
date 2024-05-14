@@ -1,23 +1,23 @@
-from model.unet import build_unet_model
-from utils.visualize import visualize_train_sample
-from pathlib import Path
-from utils.logger_prep import setup_logging
 import logging
 import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, CSVLogger
-import matplotlib.pyplot as plt
-from utils.directories_check import check_dirs, check_prepped_data
 import numpy as np
+from pathlib import Path
+
+from model.unet import build_unet_model
+from utils.visualize import visualize_train_sample
+from utils.logger_prep import get_logger
+from utils.custom_funcs import dice_coefficient, combined_loss
+from utils.directories_check import check_dirs, check_prepped_data
 from configs import prepped_train_images, prepped_train_masks, prepped_test_images, prepped_test_masks
-from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
+
 
 
 
 
 if __name__ == '__main__':
 
-    setup_logging()
-    logger = logging.getLogger(__name__)
+    logger = get_logger(__name__)
     
     gpu = tf.config.experimental.list_physical_devices('GPU')
 
@@ -38,16 +38,14 @@ if __name__ == '__main__':
     visualize_train_sample(train_images[4], train_masks[4])
 
     if Path('checkpoints/unet_model.h5').exists():
-        logger.info('Model already exists, loading...')
-        model = tf.keras.models.load_model('checkpoints/unet_model.h5', custom_objects={'dice_loss': dice_loss, 'dice_coefficient': dice_coefficient})
+        logger.info('Model already exists, use predict.py to make predictions')
     else:
         logger.info('Model not found, creating and training...')
         model = build_unet_model()
-        model.compile(optimizer='adam', loss=dice_loss, metrics=['accuracy', dice_coefficient])
+        model.compile(optimizer='adam', loss=combined_loss, metrics=['accuracy', dice_coefficient])
 
 
         # Callbacks
-        # reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=0.001)
         checkpoint = ModelCheckpoint('checkpoints/unet_model.h5', monitor='val_loss', save_best_only=True, mode='min')
         tensorboard = TensorBoard(log_dir='logs')
         csv_logger = CSVLogger('logs/training.log')
