@@ -46,8 +46,37 @@ def build_unet_model():
     u8 = upsample_block(u7, f2, 128)
     u9 = upsample_block(u8, f1, 64)
 
-    outputs = layers.Conv2D(3, 1, padding="same", activation = "softmax")(u9)
+    outputs = layers.Conv2D(1, (1, 1), padding="same", activation = "sigmoid")(u9)
 
     unet_model = Model(inputs, outputs, name="U-Net")
     return unet_model
 
+
+# from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Dropout, UpSampling2D, concatenate, BatchNormalization
+# from tensorflow.keras.models import Model
+
+
+# def build_unet(input_size=(256, 256, 3), dropout_rate=0.5):
+#     inputs = Input(input_size)
+    
+#     # Downsample
+#     c1 = Conv2D(64, (3, 3), activation='relu', padding='same')(inputs)
+#     c1 = BatchNormalization()(c1)
+#     c1 = Dropout(dropout_rate)(c1)
+#     c1 = Conv2D(64, (3, 3), activation='relu', padding='same')(c1)
+#     p1 = MaxPooling2D((2, 2))(c1)
+    
+#     # Bottleneck
+#     c5 = Conv2D(256, (3, 3), activation='relu', padding='same')(p1)
+#     c5 = Dropout(dropout_rate)(c5)
+#     c5 = Conv2D(256, (3, 3), activation='relu', padding='same')(c5)
+    
+#     # Upsample
+#     u6 = UpSampling2D((2, 2))(c5)
+#     u6 = concatenate([u6, c1])
+#     c6 = Conv2D(64, (3, 3), activation='relu', padding='same')(u6)
+#     c6 = Conv2D(64, (3, 3), activation='relu', padding='same')(c6)
+    
+#     outputs = Conv2D(1, (1, 1), activation='sigmoid')(c6)
+#     model = Model(inputs, outputs)
+#     return model
