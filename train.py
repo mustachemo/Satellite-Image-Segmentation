@@ -9,7 +9,7 @@ from utils.visualize import visualize_train_sample
 from utils.logger_prep import get_logger
 from utils.custom_funcs import dice_coefficient, combined_loss
 from utils.directories_check import check_dirs, check_prepped_data
-from configs import prepped_train_images, prepped_train_masks, prepped_test_images, prepped_test_masks
+from configs import PREPPED_TRAIN_IMAGES, PREPPED_TRAIN_MASKS, PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS
 
 
 
@@ -29,10 +29,10 @@ if __name__ == '__main__':
         logger.info(f'GPU found!')
 
     # Load the prepped data
-    train_images = tf.convert_to_tensor(np.load(prepped_train_images))
-    train_masks = tf.convert_to_tensor(np.load(prepped_train_masks))
-    test_images = tf.convert_to_tensor(np.load(prepped_test_images))
-    test_masks = tf.convert_to_tensor(np.load(prepped_test_masks))
+    train_images = tf.convert_to_tensor(np.load(PREPPED_TRAIN_IMAGES))
+    train_masks = tf.convert_to_tensor(np.load(PREPPED_TRAIN_MASKS))
+    test_images = tf.convert_to_tensor(np.load(PREPPED_TEST_IMAGES))
+    test_masks = tf.convert_to_tensor(np.load(PREPPED_TEST_MASKS))
 
     visualize_train_sample(train_images[4], train_masks[4])
 

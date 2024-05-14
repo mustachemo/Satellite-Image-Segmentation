@@ -1,11 +1,14 @@
 # Directory paths
-train_images_dir = './data/images/train'
-train_masks_dir = './data/mask/train'
-test_images_dir = './data/images/val'
-test_masks_dir = './data/mask/val'
+TRAIN_IMAGES_DIR = './data/images/train'
+TRAIN_MASKS_DIR = './data/mask/train'
+TEST_IMAGES_DIR = './data/images/val'
+TEST_MASKS_DIR = './data/mask/val'
 
 # Prepped directories, images and masks resized to 256x256 and made into numpy arrays and grayscale
-prepped_train_images = 'prepped_data/trainimages.npy'
-prepped_train_masks = 'prepped_data/trainmasks.npy'
-prepped_test_images = 'prepped_data/testimages.npy'
-prepped_test_masks = 'prepped_data/testmasks.npy'
+PREPPED_TRAIN_IMAGES = 'prepped_data/trainimages.npy'
+PREPPED_TRAIN_MASKS = 'prepped_data/trainmasks.npy'
+PREPPED_TEST_IMAGES = 'prepped_data/testimages.npy'
+PREPPED_TEST_MASKS = 'prepped_data/testmasks.npy'
+
+# Uncertainty quantification test example index
+UQ_TEST_EXAMPLE_INDEX = 0

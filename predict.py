@@ -6,7 +6,7 @@ from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.visualize import visualize_test_sample
 from utils.logger_prep import get_logger
-from configs import prepped_test_images, prepped_test_masks
+from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS 
 
 if __name__ == '__main__':
 
@@ -23,8 +23,8 @@ if __name__ == '__main__':
         exit()
 
 
-    test_images = tf.convert_to_tensor(np.load(prepped_test_images))
-    test_masks = tf.convert_to_tensor(np.load(prepped_test_masks))
+    test_images = tf.convert_to_tensor(np.load(PREPPED_TEST_IMAGES))
+    test_masks = tf.convert_to_tensor(np.load(PREPPED_TEST_MASKS))
 
     # Predict and show results
     logger.info('Predicting test images')
