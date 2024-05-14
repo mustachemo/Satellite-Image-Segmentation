@@ -32,7 +32,7 @@ def upsample_block(input_tensor, skip_tensor, num_filters):
 
 def build_unet_model():
     # inputs
-    inputs = layers.Input(shape=(720, 1280, 3))
+    inputs = layers.Input(shape=(256, 256, 3))
 
     f1, p1 = downsample_block(inputs, 64)
     f2, p2 = downsample_block(p1, 128)
