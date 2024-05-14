@@ -20,13 +20,15 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(1, 2, figsize=(15, 7))
 
     # Display the image and mask
-    ax[0].imshow(train_images[4])
-    ax[0].set_title('Image')
+    for i in range(50):
+        ax[0].imshow(train_images[i])
+        ax[0].set_title('Image')
 
-    ax[1].imshow(train_masks[4], cmap='gray')
-    ax[1].set_title('Mask')
+        ax[1].imshow(train_masks[i], cmap='gray')
+        ax[1].set_title('Mask')
+        
 
-    plt.show()
+        plt.show()
     
     model = build_unet_model()
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', MeanIoU(num_classes=2)])
