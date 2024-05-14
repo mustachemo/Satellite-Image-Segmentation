@@ -13,7 +13,7 @@ if __name__ == '__main__':
     if not gpu:
         logging.warning('No GPU found, model may be slow or fail to train')
     else:
-        logging.info(f'GPU {gpu[0].device_type} found')
+        logging.info(f'GPU found!')
 
     # Load the dataset
     dataset = DatasetLoader(images_dir=image_dir, mask_dir=mask_dir, scale=1.0)

@@ -40,6 +40,9 @@ def unique_mask_values(idx, mask_dir, mask_suffix):
 
 class DatasetLoader(tf.data.Dataset):
     def _generator(ids, images_dir, mask_dir, scale, mask_suffix, mask_values):
+        images_dir = Path(images_dir)
+        mask_dir = Path(mask_dir)
+        
         for id in ids:
             name = id
             mask_file = list(mask_dir.glob(name + mask_suffix + '.*'))
@@ -56,10 +59,16 @@ class DatasetLoader(tf.data.Dataset):
             img = preprocess(mask_values, img, scale, is_mask=False)
             mask = preprocess(mask_values, mask, scale, is_mask=True)
 
-            yield {
-                'image': tf.convert_to_tensor(img.copy(), dtype=tf.float32),
-                'mask': tf.convert_to_tensor(mask.copy(), dtype=tf.int64)
-            }
+            # yield {
+            #     'image': tf.convert_to_tensor(img.copy(), dtype=tf.float32),
+            #     'mask': tf.convert_to_tensor(mask.copy(), dtype=tf.int64)
+            # }
+            # yield {
+            #     'input_1': tf.convert_to_tensor(img.copy(), dtype=tf.float32),
+            #     'mask': tf.convert_to_tensor(mask.copy(), dtype=tf.int64)
+            # }
+            yield (tf.convert_to_tensor(img.copy(), dtype=tf.float32),
+                tf.convert_to_tensor(mask.copy(), dtype=tf.int64))
 
     def __new__(cls, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = '_mask'):
         images_dir = Path(images_dir)
@@ -81,11 +90,25 @@ class DatasetLoader(tf.data.Dataset):
         mask_values = list(sorted(np.unique(np.concatenate(unique), axis=0).tolist()))
         logging.info(f'Unique mask values: {mask_values}')
 
+        # return tf.data.Dataset.from_generator(
+        #     cls._generator,
+        #     output_types={'image': tf.float32, 'mask': tf.int64},
+        #     args=(ids, str(images_dir), str(mask_dir), scale, mask_suffix, mask_values)
+        # )
+        # return tf.data.Dataset.from_generator(
+        #     cls._generator,
+        #     output_types={'input_1': tf.float32, 'mask': tf.int64},
+        #     args=(ids, str(images_dir), str(mask_dir), scale, mask_suffix, mask_values)
+        # )
         return tf.data.Dataset.from_generator(
             cls._generator,
-            output_types={'image': tf.float32, 'mask': tf.int64},
+            output_signature=(
+                tf.TensorSpec(shape=(None, 256, 256, 3), dtype=tf.float32),
+                tf.TensorSpec(shape=(None, 256, 256), dtype=tf.int64)
+            ),
             args=(ids, str(images_dir), str(mask_dir), scale, mask_suffix, mask_values)
         )
+
 
 def preprocess(mask_values, pil_img, scale, is_mask):
     w, h = pil_img.size

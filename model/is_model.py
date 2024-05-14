@@ -32,22 +32,22 @@ def upsample_block(input_tensor, skip_tensor, num_filters):
 
 def build_unet_model():
     # inputs
-   inputs = layers.Input(shape=(128,128,3))
+    inputs = layers.Input(shape=(256, 256, 3), name='input_1')
 
-   f1, p1 = downsample_block(inputs, 64)
-   f2, p2 = downsample_block(p1, 128)
-   f3, p3 = downsample_block(p2, 256)
-   f4, p4 = downsample_block(p3, 512)
+    f1, p1 = downsample_block(inputs, 64)
+    f2, p2 = downsample_block(p1, 128)
+    f3, p3 = downsample_block(p2, 256)
+    f4, p4 = downsample_block(p3, 512)
 
-   bottleneck = double_conv_block(p4, 1024)
+    bottleneck = double_conv_block(p4, 1024)
 
-   u6 = upsample_block(bottleneck, f4, 512)
-   u7 = upsample_block(u6, f3, 256)
-   u8 = upsample_block(u7, f2, 128)
-   u9 = upsample_block(u8, f1, 64)
+    u6 = upsample_block(bottleneck, f4, 512)
+    u7 = upsample_block(u6, f3, 256)
+    u8 = upsample_block(u7, f2, 128)
+    u9 = upsample_block(u8, f1, 64)
 
-   outputs = layers.Conv2D(3, 1, padding="same", activation = "softmax")(u9)
+    outputs = layers.Conv2D(3, 1, padding="same", activation = "softmax")(u9)
 
-   unet_model = Model(inputs, outputs, name="U-Net")
-   return unet_model
+    unet_model = Model(inputs, outputs, name="U-Net")
+    return unet_model
 
