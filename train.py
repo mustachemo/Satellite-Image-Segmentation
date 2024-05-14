@@ -7,6 +7,20 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, Tenso
 from tensorflow.keras.metrics import MeanIoU
 import matplotlib.pyplot as plt
 
+def dice_coefficient(y_true, y_pred, smooth=1e-6):
+    # Flatten the tensors to keep consistency
+    y_true_f = tf.reshape(y_true, [-1])
+    y_pred_f = tf.reshape(y_pred, [-1])
+    
+    # Calculate intersection and union
+    intersection = tf.reduce_sum(y_true_f * y_pred_f)
+    union = tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f)
+    
+    # Calculate the Dice coefficient
+    dice = (2. * intersection + smooth) / (union + smooth)
+    
+    return dice
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -26,12 +40,12 @@ if __name__ == '__main__':
 
         ax[1].imshow(train_masks[i], cmap='gray')
         ax[1].set_title('Mask')
-        
+
 
         plt.show()
     
     model = build_unet_model()
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', MeanIoU(num_classes=2)])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', MeanIoU(num_classes=2, name='iou'), dice_coefficient])
 
 
     # Callbacks
