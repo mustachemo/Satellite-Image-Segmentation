@@ -42,13 +42,7 @@ if __name__ == '__main__':
     model.fit(train_images, train_masks, epochs=5, batch_size=1, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
     logging.info('Training complete')
 
-    # Predict and show results
-    logging.info('Predicting test images')
-    predictions = model.predict(test_images)
-    for i in range(5):
-        plt.imshow(test_images[i])
-        plt.imshow(predictions[i])
-        plt.show()
+
 
 
 

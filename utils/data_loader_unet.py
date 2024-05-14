@@ -6,10 +6,10 @@ from tensorflow.image import rgb_to_grayscale
 from tqdm import tqdm
 
 # Directory paths
-train_images_dir = './temp_data/images/train'
-test_images_dir = './temp_data/images/val'
-train_masks_dir = './temp_data/mask/train'
-test_masks_dir = './temp_data/mask/val'
+train_images_dir = './data/images/train'
+test_images_dir = './data/images/val'
+train_masks_dir = './data/mask/train'
+test_masks_dir = './data/mask/val'
 
 # Get all file names
 train_image_files = os.listdir(train_images_dir)
