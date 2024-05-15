@@ -25,8 +25,8 @@ def load_and_process_files(image_dir, mask_dir, prefix='train'):
 
 
         # Convert to array and normalize
-        image = img_to_array(image) / 255.0
-        mask = img_to_array(mask) / 255.0
+        image = img_to_array(image, dtype=np.float32) / np.max(image)
+        mask = img_to_array(mask, dtype=np.float32) / np.max(mask)
 
         # Convert to tensors
         image = tf.convert_to_tensor(image, dtype=tf.float32)

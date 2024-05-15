@@ -15,5 +15,6 @@ DROPOUT_RATE = 0.35
 X_DIMENSION = 256
 Y_DIMENSION = 256
 
-# Uncertainty quantification test example index
+# Uncertainty quantification testing
 NUM_SAMPLES_MC_DROPOUT_PREDICTION = 10
+GRID_ITERATIONS = 5
