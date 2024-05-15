@@ -16,5 +16,4 @@ X_DIMENSION = 256
 Y_DIMENSION = 256
 
 # Uncertainty quantification test example index
-UQ_TEST_EXAMPLE_INDEX = 0
 NUM_SAMPLES_MC_DROPOUT_PREDICTION = 10

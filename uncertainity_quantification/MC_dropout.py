@@ -152,27 +152,3 @@ def get_uncertainty_avgs(mean_prediction, std_deviation):
     logger.info(f'Low Uncertainty Average: {np.mean(low_uncertainty)}')
     logger.info(f'Medium Uncertainty Average: {np.mean(medium_uncertainty)}')
     logger.info(f'High Uncertainty Average: {np.mean(high_uncertainty)}')
-
-def plot_hexbin(mean_prediction, std_deviation):
-    flat_mean = mean_prediction.flatten()
-    flat_std = std_deviation.flatten()
-    plt.figure(figsize=(8, 6))
-    hb = plt.hexbin(flat_mean, flat_std, gridsize=50, cmap='Blues', mincnt=1)
-    cb = plt.colorbar(hb, label='Count')
-    plt.xlabel('Mean Prediction')
-    plt.ylabel('Standard Deviation')
-    plt.title('Hexbin Plot of Mean Prediction vs. Standard Deviation')
-    plt.grid(True)
-    plt.show()
-
-def plot_2d_histogram(mean_prediction, std_deviation):
-    flat_mean = mean_prediction.flatten()
-    flat_std = std_deviation.flatten()
-    plt.figure(figsize=(8, 6))
-    plt.hist2d(flat_mean, flat_std, bins=50, cmap='Blues')
-    cb = plt.colorbar(label='Count')
-    plt.xlabel('Mean Prediction')
-    plt.ylabel('Standard Deviation')
-    plt.title('2D Histogram of Mean Prediction vs. Standard Deviation')
-    plt.grid(True)
-    plt.show()

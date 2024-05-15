@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, UQ_TEST_EXAMPLE_INDEX, DROPOUT_RATE, NUM_SAMPLES_MC_DROPOUT_PREDICTION, X_DIMENSION, Y_DIMENSION
+from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE, NUM_SAMPLES_MC_DROPOUT_PREDICTION
 from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.logger_prep import get_logger
@@ -27,21 +27,24 @@ if __name__ == '__main__':
     test_masks = tf.convert_to_tensor(np.load(PREPPED_TEST_MASKS))
 
 
-    # #* Uncertainty quantification using MC dropout for a single test image
+    #######################################################################
+    # Uncertainty quantification using MC dropout #
+    #######################################################################
+
+    # Perform MC dropout inference on a single test image
     mc_predictions = mc_dropout_predictions(model, test_images[0], num_samples=NUM_SAMPLES_MC_DROPOUT_PREDICTION)
     mean_prediction = np.mean(mc_predictions, axis=0)
     std_deviation = np.std(mc_predictions, axis=0)
-
     visualize_mean_std(test_images[0], test_masks[0], mean_prediction, std_deviation)
     visualize_confidence_intervals(test_images[0], mean_prediction, std_deviation, confidence_level=0.95)
     plot_correlation_analysis(mean_prediction, std_deviation)
     get_uncertainty_avgs(mean_prediction, std_deviation)
 
-    #* Uncertainty quantification using MC dropout for all test images
+    # Perform MC dropout inference on all test images
     mean_of_means, mean_of_stds = run_mc_dropout_on_all_images(model, test_images, num_samples=NUM_SAMPLES_MC_DROPOUT_PREDICTION)
     plot_correlation_analysis(mean_of_means, mean_of_stds)
     get_uncertainty_avgs(mean_of_means, mean_of_stds)
 
-
+    #######################################################################
 
     logger.info('Uncertainty quantification experiment complete')
