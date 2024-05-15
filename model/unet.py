@@ -1,5 +1,6 @@
 from tensorflow.keras import layers
 from tensorflow.keras.models import Model
+from configs import X_DIMENSION, Y_DIMENSION
 
 
 def downsample_block(input_tensor, num_filters, dropout_rate=0.1):
@@ -39,7 +40,7 @@ def upsample_block(input_tensor, skip_tensor, num_filters, dropout_rate=0.1):
 
 def build_unet_model(dropout_rate=0.1):
     """Build U-Net model incorporating dropout for uncertainty estimation."""
-    inputs = layers.Input(shape=(256, 256, 3))
+    inputs = layers.Input(shape=(Y_DIMENSION, X_DIMENSION, 3))
 
     # Encoding path
     f1, p1 = downsample_block(inputs, 64, dropout_rate)

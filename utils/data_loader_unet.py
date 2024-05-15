@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from tqdm import tqdm
+from configs import X_DIMENSION, Y_DIMENSION
 
 def load_and_process_files(image_dir, mask_dir, prefix='train'):
     images = []
@@ -16,8 +17,8 @@ def load_and_process_files(image_dir, mask_dir, prefix='train'):
         mask_path = os.path.join(mask_dir, f'{file_name}_mask.png')
 
         try:
-            image = load_img(image_path, color_mode='rgb', target_size=(256, 256))
-            mask = load_img(mask_path, color_mode='grayscale', target_size=(256, 256))
+            image = load_img(image_path, color_mode='rgb', target_size=(X_DIMENSION, Y_DIMENSION))
+            mask = load_img(mask_path, color_mode='grayscale', target_size=(X_DIMENSION, Y_DIMENSION))
         except Exception as e:
             print(f'image: {file_name}.png mask: {file_name}_mask.png not found, continuing...')
             continue
