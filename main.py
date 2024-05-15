@@ -6,8 +6,7 @@ from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.logger_prep import get_logger
 
-from uncertainity_quantification.MC_dropout import mc_dropout_predictions, visualize_mean_std
-
+from uncertainity_quantification.MC_dropout import mc_dropout_predictions, visualize_mean_std, visualize_confidence_intervals
 
 if __name__ == '__main__':
 
@@ -36,5 +35,9 @@ if __name__ == '__main__':
     mean_prediction = np.mean(mc_predictions, axis=0)
     std_deviation = np.std(mc_predictions, axis=0)
     visualize_mean_std(test_image, test_mask, mean_prediction, std_deviation)
+
+    # Visualize the confidence intervals
+    visualize_confidence_intervals(test_image, mean_prediction, std_deviation, confidence_level=0.95)
+
 
     logger.info('Uncertainty quantification experiment complete')
