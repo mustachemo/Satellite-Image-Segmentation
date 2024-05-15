@@ -9,7 +9,7 @@ from utils.visualize import visualize_train_sample
 from utils.logger_prep import get_logger
 from utils.custom_funcs import dice_coefficient, combined_loss
 from utils.directories_check import check_dirs, check_prepped_data
-from configs import prepped_train_images, prepped_train_masks, prepped_test_images, prepped_test_masks
+from configs import PREPPED_TRAIN_IMAGES, PREPPED_TRAIN_MASKS, PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE
 
 
 
@@ -17,8 +17,10 @@ from configs import prepped_train_images, prepped_train_masks, prepped_test_imag
 
 if __name__ == '__main__':
 
+    check_dirs()
+    check_prepped_data()
     logger = get_logger(__name__)
-    
+
     gpu = tf.config.experimental.list_physical_devices('GPU')
 
     if not gpu:
@@ -26,27 +28,24 @@ if __name__ == '__main__':
     else:
         logger.info(f'GPU found!')
 
-    check_dirs()
-    check_prepped_data()
-
     # Load the prepped data
-    train_images = tf.convert_to_tensor(np.load(prepped_train_images))
-    train_masks = tf.convert_to_tensor(np.load(prepped_train_masks))
-    test_images = tf.convert_to_tensor(np.load(prepped_test_images))
-    test_masks = tf.convert_to_tensor(np.load(prepped_test_masks))
+    train_images = tf.convert_to_tensor(np.load(PREPPED_TRAIN_IMAGES))
+    train_masks = tf.convert_to_tensor(np.load(PREPPED_TRAIN_MASKS))
+    test_images = tf.convert_to_tensor(np.load(PREPPED_TEST_IMAGES))
+    test_masks = tf.convert_to_tensor(np.load(PREPPED_TEST_MASKS))
 
-    visualize_train_sample(train_images[4], train_masks[4])
+    # visualize_train_sample(train_images[4], train_masks[4])
 
-    if Path('checkpoints/unet_model.h5').exists():
-        logger.info('Model already exists, use predict.py to make predictions')
+    if Path(f'checkpoints/unet_model_{DROPOUT_RATE}.h5').exists():
+        logger.info('Model already exists, exiting...')
+        exit()
     else:
         logger.info('Model not found, creating and training...')
-        model = build_unet_model()
+        model = build_unet_model(dropout_rate=DROPOUT_RATE)
         model.compile(optimizer='adam', loss=combined_loss, metrics=['accuracy', dice_coefficient])
 
-
         # Callbacks
-        checkpoint = ModelCheckpoint('checkpoints/unet_model.h5', monitor='val_loss', save_best_only=True, mode='min')
+        checkpoint = ModelCheckpoint(f'checkpoints/unet_model_{DROPOUT_RATE}.h5', monitor='val_loss', save_best_only=True, mode='min')
         tensorboard = TensorBoard(log_dir='logs')
         csv_logger = CSVLogger('logs/training.log')
 
