@@ -14,6 +14,8 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Bounding Boxes](#bounding-boxes)
   - [Additional Resources](#additional-resources)
   - [Acknowledgements](#acknowledgements)
+    - [MC Dropout](#mc-dropout)
+    - [Further UQ in Deep Learning](#further-uq-in-deep-learning)
 
 ## Introduction
 
@@ -66,15 +68,10 @@ The file `all_bbox.txt` includes bounding boxes of all satellites inside the dat
 
 ## Acknowledgements
 
-This project is inspired by the work of [Yarin Gal](http://www.cs.ox.ac.uk/people/yarin.gal/website/index.html)
-and [A review of uncertainty quantification in deep learning: Techniques, applications and challenges](https://www.sciencedirect.com/science/article/pii/S1566253521001081).
+### MC Dropout
 
-For the Turion Space assessment, I have implemented the following experiments:
+- [Yarin Gal](http://www.cs.ox.ac.uk/people/yarin.gal/website/index.html)
 
-- [ ] Dropout layers in object detection models
-- [ ] Monte Carlo dropout
-- [ ] Ensemble methods
-- [ ] Bayesian neural networks
-- [ ] Calibration metrics
-- [ ] Evaluation on SpaceNet dataset
-- [ ] Report
+### Further UQ in Deep Learning
+
+- [A review of uncertainty quantification in deep learning: Techniques, applications and challenges](https://www.sciencedirect.com/science/article/pii/S1566253521001081).

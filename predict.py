@@ -30,12 +30,12 @@ if __name__ == '__main__':
     logger.info('Predicting test images')
     predictions = model.predict(test_images)
 
-    for i in range(10):
+    for i in range(1):
         visualize_test_sample(test_images[i], test_masks[i], predictions[i])
 
-    # Use F1 score to evaluate the model
+    # Evaluate the model
     logger.info('Evaluating model')
     loss, accuracy, dice_coefficient_metric = model.evaluate(test_images, test_masks)
-    logger.info(f'Loss: {loss}, Accuracy: {accuracy}, Dice Coefficient: {dice_coefficient_metric}')
+    logger.info(f'Loss: {round(loss, 3)}, Accuracy: {round(accuracy, 3)}, Dice Coefficient: {round(dice_coefficient_metric, 3)}')
     
     logger.info('Predictions complete')
