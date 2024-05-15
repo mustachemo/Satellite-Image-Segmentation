@@ -10,5 +10,8 @@ PREPPED_TRAIN_MASKS = 'prepped_data/trainmasks.npy'
 PREPPED_TEST_IMAGES = 'prepped_data/testimages.npy'
 PREPPED_TEST_MASKS = 'prepped_data/testmasks.npy'
 
+# Model hyperparameters
+DROPOUT_RATE = 0.35
+
 # Uncertainty quantification test example index
 UQ_TEST_EXAMPLE_INDEX = 0

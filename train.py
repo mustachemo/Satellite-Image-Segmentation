@@ -9,7 +9,7 @@ from utils.visualize import visualize_train_sample
 from utils.logger_prep import get_logger
 from utils.custom_funcs import dice_coefficient, combined_loss
 from utils.directories_check import check_dirs, check_prepped_data
-from configs import PREPPED_TRAIN_IMAGES, PREPPED_TRAIN_MASKS, PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS
+from configs import PREPPED_TRAIN_IMAGES, PREPPED_TRAIN_MASKS, PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE
 
 
 
@@ -34,17 +34,18 @@ if __name__ == '__main__':
     test_images = tf.convert_to_tensor(np.load(PREPPED_TEST_IMAGES))
     test_masks = tf.convert_to_tensor(np.load(PREPPED_TEST_MASKS))
 
-    visualize_train_sample(train_images[4], train_masks[4])
+    # visualize_train_sample(train_images[4], train_masks[4])
 
-    if Path('checkpoints/unet_model.h5').exists():
-        logger.info('Model already exists, use predict.py to make predictions')
+    if Path(f'checkpoints/unet_model_{DROPOUT_RATE}.h5').exists():
+        logger.info('Model already exists, exiting...')
+        exit()
     else:
         logger.info('Model not found, creating and training...')
-        model = build_unet_model(dropout_rate=0.5)
+        model = build_unet_model(dropout_rate=DROPOUT_RATE)
         model.compile(optimizer='adam', loss=combined_loss, metrics=['accuracy', dice_coefficient])
 
         # Callbacks
-        checkpoint = ModelCheckpoint('checkpoints/unet_model.h5', monitor='val_loss', save_best_only=True, mode='min')
+        checkpoint = ModelCheckpoint(f'checkpoints/unet_model_{DROPOUT_RATE}.h5', monitor='val_loss', save_best_only=True, mode='min')
         tensorboard = TensorBoard(log_dir='logs')
         csv_logger = CSVLogger('logs/training.log')
 

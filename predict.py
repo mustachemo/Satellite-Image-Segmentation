@@ -6,7 +6,7 @@ from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.visualize import visualize_test_sample
 from utils.logger_prep import get_logger
-from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS 
+from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE
 
 if __name__ == '__main__':
 
@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     # Load the model
     try: 
-        model = tf.keras.models.load_model('checkpoints/unet_model.h5', custom_objects={'dice_loss': dice_loss, 'dice_coefficient': dice_coefficient, 'combined_loss': combined_loss})
+        model = tf.keras.models.load_model(f'checkpoints/unet_model_{DROPOUT_RATE}.h5', custom_objects={'dice_loss': dice_loss, 'dice_coefficient': dice_coefficient, 'combined_loss': combined_loss})
         logger.info('Model loaded successfully')
     except Exception as e:
         logger.error(f'Model not found, please train the model first: {e}')
