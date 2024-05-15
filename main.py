@@ -6,7 +6,15 @@ from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.logger_prep import get_logger
 
-from uncertainity_quantification.MC_dropout import mc_dropout_predictions, visualize_mean_std, visualize_confidence_intervals, plot_correlation_analysis, get_uncertainty_avgs, run_mc_dropout_on_all_images, visualize_mean_std_grid
+from uncertainity_quantification.MC_dropout import (
+    mc_dropout_predictions, 
+    visualize_mean_std, 
+    visualize_confidence_intervals, 
+    plot_correlation_analysis, 
+    get_uncertainty_avgs, 
+    run_mc_dropout_on_all_images, 
+    visualize_mean_std_grid
+)
 
 if __name__ == '__main__':
 
