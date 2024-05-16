@@ -5,6 +5,7 @@
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{booktabs}
 
 \title{Uncertainty Quantification for Satellite Image Segmentation}
 \author{Mohamed Hasan}
@@ -232,6 +233,37 @@ the MC Dropout technique for one of the validation images.
 \end{itemize}
 \vspace{1em}
 
+\subsection{Activation Functions}
 
+Activation functions play a crucial role in the learning and representation capabilities of neural networks. They introduce 
+non-linearity, enabling the network to learn complex patterns. Each activation function has its unique characteristics and 
+impacts the model's convergence and generalization in different ways. By evaluating multiple activation functions, we aim 
+to identify which ones contribute most effectively to the accuracy and robustness of our segmentation model.
+
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \textbf{Activation Function} & \textbf{Loss} & \textbf{Accuracy} & \textbf{Dice Coefficient} \\
+        \hline
+        ReLU & 0.399 & 0.94 & 0.803 \\
+        \hline
+        ELU & 0.499 & 0.914 & 0.773 \\
+        \hline
+        Swish & 0.43 & 0.934 & 0.762 \\
+        \hline
+        GELU & 0.436 & 0.932 & 0.775 \\
+        \hline
+        Leaky ReLU & 0.418 & 0.933 & 0.772 \\
+        \hline
+    \end{tabular}
+    \caption{Performance Metrics for Different Activation Functions}
+    \label{tab:activation_functions}
+\end{table}
+
+From the results in Table 1, we observe that the ReLU activation function performs the best in terms of accuracy and Dice. 
+Good thing we used ReLU as the activation function in our model for the MC Dropout uncertainity quantification, as it is 
+the best performing activation function in this case.
 
 \end{document}

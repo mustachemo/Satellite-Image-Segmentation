@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE, NUM_SAMPLES_MC_DROPOUT_PREDICTION, GRID_ITERATIONS
+from configs import *
 from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.logger_prep import get_logger
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     # Load the model and test data
     try: 
-        model = tf.keras.models.load_model(f'checkpoints/unet_model_{DROPOUT_RATE}.h5', custom_objects={'dice_loss': dice_loss, 'dice_coefficient': dice_coefficient, 'combined_loss': combined_loss})
+        model = tf.keras.models.load_model(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5', custom_objects={'dice_loss': dice_loss, 'dice_coefficient': dice_coefficient, 'combined_loss': combined_loss})
         logger.info('Model loaded successfully')
     except Exception as e:
         logger.error(f'Model not found, please train the model first: {e}')
