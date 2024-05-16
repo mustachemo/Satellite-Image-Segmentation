@@ -8,6 +8,7 @@ This repository contains experiments and implementations for uncertainty quantif
 - [Usage](#usage)
   - [Primary Files:](#primary-files)
   - [Directory Structure:](#directory-structure)
+  - [Running the experiments:](#running-the-experiments)
 - [Satellite Dataset](#satellite-dataset)
 - [Information](#information)
 - [Acknowledgements](#acknowledgements)
@@ -17,7 +18,7 @@ This repository contains experiments and implementations for uncertainty quantif
 
 ## Introduction
 
-Uncertainty quantification is crucial in critical applications like space object detection. This project aims to implement techniques to measure uncertainty in image segmentation models using MC dropout and other UQ techniques.
+Uncertainty quantification is crucial in critical applications like space object detection and segmentation. This project aims to implement techniques to measure uncertainty in image segmentation models (UNet) using MC dropout and other UQ techniques.
 
 ## Installation
 
@@ -48,11 +49,25 @@ pip install -r requirements.txt
 - `model/`: The U-Net model implementation.
 - `uncertainty_quantification/`: helper functions for Uncertainty Quantification experiments.
 - `utils/`: utility functions for data loading, visualization, and custom loss functions.
+- `report/`: report directory. Includes images, tex file, and pdf for report.
 - `checkpoints/`: saved model checkpoints (empty/nonexistant until a model is trained).
 - `data/`: the dataset directory (empty/nonexistant until you download the [dataset](https://github.com/Yurushia1998/SatelliteDataset) and put it in here).
-- `logs/`: logs for training and validation metrics.
+- `logs/`: logs for training and validation metrics (empty/nonexistant until a model is trained).
 - `prepped_data/`: preprocessed data for training and validation (empty/nonexistant until data from data/ directory is preprocessed).
-- `reports/`: report directory. Includes images, tex file, and pdf for report.
+
+### Running the experiments:
+
+1. Download the dataset from [here](https://github.com/Yurushia1998/SatelliteDataset)
+2. Place the dataset in the `data/` directory.
+3. Run `train.py` to train the model (The prepped data used for the training will be automatically saved in the `prepped_data/` directory when running the training script).
+4. Run `predict.py` to make predictions on the validation dataset.
+5. Run `main.py` to run the experiments and generate the report.
+
+```bash
+python train.py
+python predict.py
+python main.py
+```
 
 ## Satellite Dataset
 
