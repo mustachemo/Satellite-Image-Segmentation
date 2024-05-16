@@ -9,7 +9,7 @@ from utils.visualize import visualize_train_sample
 from utils.logger_prep import get_logger
 from utils.custom_funcs import dice_coefficient, combined_loss, combined_loss_bayesian_unet
 from utils.directories_check import check_dirs, check_prepped_data
-from configs import PREPPED_TRAIN_IMAGES, PREPPED_TRAIN_MASKS, PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE
+from configs import *
 
 logger = get_logger(__name__)
 
@@ -28,7 +28,7 @@ def train_unet(train_images, train_masks, test_images, test_masks):
         csv_logger = CSVLogger('logs/training.log')
 
         # Train the model
-        model.fit(train_images, train_masks, epochs=5, batch_size=1, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
+        model.fit(train_images, train_masks, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
         logger.info('Training complete for UNet model')
 
 def train_bayesian_unet(train_images, train_masks, test_images, test_masks):
@@ -46,7 +46,7 @@ def train_bayesian_unet(train_images, train_masks, test_images, test_masks):
         csv_logger = CSVLogger('logs/training.log')
 
         # Train the model
-        model.fit(train_images, train_masks, epochs=5, batch_size=1, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
+        model.fit(train_images, train_masks, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
         logger.info('Training complete for Bayesian UNet model')
 
 

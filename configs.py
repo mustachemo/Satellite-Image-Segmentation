@@ -1,3 +1,7 @@
+# Data configuration
+X_DIMENSION = 256
+Y_DIMENSION = 256
+
 # Directory paths
 TRAIN_IMAGES_DIR = './data/images/train'
 TRAIN_MASKS_DIR = './data/mask/train'
@@ -12,8 +16,9 @@ PREPPED_TEST_MASKS = 'prepped_data/testmasks.npy'
 
 # Model hyperparameters
 DROPOUT_RATE = 0.35
-X_DIMENSION = 256
-Y_DIMENSION = 256
+BATCH_SIZE = 1
+EPOCHS = 5
+
 
 # Uncertainty quantification testing
 NUM_SAMPLES_MC_DROPOUT_PREDICTION = 10
