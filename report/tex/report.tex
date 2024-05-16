@@ -150,12 +150,12 @@ The file contains the following hyperparameters:
 \subsection{Evaluation}
 The final model achieved:
 \begin{itemize}
-    \item Loss: 0.598
-    \item Accuracy: 0.868
-    \item Dice Coefficient: 0.646
+    \item Loss: 0.399
+    \item Accuracy: 0.940
+    \item Dice Coefficient: 0.803
 \end{itemize}
 
-The model shows good performance on the validation set, with high accuracy and a reasonable Dice Coefficient, 
+The model shows good performance on the validation set, with high accuracy and Dice Coefficient, 
 despite the challenging nature of the dataset and the low number of epochs. Let's visualize the model's 
 predictions on a sample image from the validation set.
 
@@ -167,7 +167,7 @@ predictions on a sample image from the validation set.
 \end{figure}
 
 The model successfully segments the satellite from the background, capturing the main features of the satellite
-with a dice coefficient of 0.8379. Notice however that the model captures the details of the satellite which we 
+with a dice coefficient of 0.8860. Notice however that the model captures the details of the satellite which we 
 did not include in the masks. This is due to the model's ability to learn from the training data and generalize.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,12 +224,11 @@ the MC Dropout technique for one of the validation images.
     \item \textbf{test image[2]}: The satellite and its solar panels are identified, but the prediction is somewhat 
     spread, with significant uncertainty around the solar panels. This is most likely because the solar panels are blue 
     and the background is the blue oceans which makes it harder for the model to distinguish between the two.
-    \item \textbf{test image[3]}: The satellite is identified, but there is a bubble of 
-    uncertainity around the edges of the satellite. This is most likely due to the hue around the mask.
+    \item \textbf{test image[3]}: The satellite is identified quite well, with uncertainity only around the edges.
     \item \textbf{test image[4]}: The three satellites are identifies, but the model also identifes two astroids as satellites. 
     This is most likely due to the dataset not having many examples of astroids and the astroids having similar features 
     (most likely textures) to the satellites.
-    \item \textbf{test image[5]}: The satellite is identified and there is uncertainity on the solar panels.
+    \item \textbf{test image[5]}: The satellite is identified quite well, with uncertainity only around the edges.
 \end{itemize}
 \vspace{1em}
 

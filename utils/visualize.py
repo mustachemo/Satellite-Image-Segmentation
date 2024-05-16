@@ -64,7 +64,7 @@ def visualize(image_index):
     # # Draw bounding boxes on the image
     # image = draw_bboxes_on_image(image, image_bboxes)
 
-    ax[0].imshow(image)
+    # ax[0].imshow(image)
 
     plt.show()
 
