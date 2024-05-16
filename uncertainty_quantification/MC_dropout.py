@@ -131,6 +131,47 @@ def visualize_mean_std_grid(test_images, test_masks, predictions, rows=4, cols=5
     plt.show()
 
 
+def visualize_mean_std_grid_multi_models(test_images, test_masks, predictions, rows=4, cols=5, activation_funcs=None):
+    """
+    Visualize the test images, masks, mean predictions, and uncertainty across multiple samples.
+    
+    Parameters:
+        test_images (numpy.array): Array of test images.
+        test_masks (numpy.array): Array of corresponding masks.
+        predictions (list): List of predictions arrays, each from a different MC sample.
+        num_samples (int): Number of MC samples to visualize.
+        rows (int): Number of rows in the grid.
+        cols (int): Number of columns in the grid.
+    """
+    fig, axes = plt.subplots(rows, cols, figsize=(3 * cols + 10, 3 * rows + 10))
+    
+    for i in range(cols):
+        for j in range(rows):
+            ax = axes[j, i]
+            mean_prediction = np.mean(predictions[i], axis=0)
+            std_deviation = np.std(predictions[i], axis=0)
+            
+            if j == 0:  # First row - Test Image
+                im = ax.imshow(test_images)
+                ax.set_title(f'{activation_funcs[i]}')
+            elif j == 1:  # Second row - Test Mask
+                im = ax.imshow(test_masks, cmap='gray')
+                ax.set_title(f'Test Mask')
+            elif j == 2:  # Third row - Mean Prediction
+                im = ax.imshow(mean_prediction[0, :, :, 0], cmap='gray')
+                ax.set_title(f'Mean Prediction')
+            elif j == 3:  # Fourth row - Prediction Uncertainty
+                im = ax.imshow(std_deviation[0, :, :, 0], cmap='gray')
+                ax.set_title(f'Uncertainty')
+            
+            ax.axis('off')
+            if i == cols - 1:
+                fig.colorbar(im, ax=ax)
+
+    plt.tight_layout(pad=3.0, h_pad=3.0)
+    plt.show()
+
+
 # Confidence Interval Visualizations
 def visualize_confidence_intervals(test_image, mean_prediction, std_deviation, confidence_level=0.95):
     """ Visualize the confidence intervals of the model predictions.
