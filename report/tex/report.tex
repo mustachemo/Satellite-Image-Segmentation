@@ -173,7 +173,7 @@ did not include in the masks. This is due to the model's ability to learn from t
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Uncertainty Quantification}
-\subsection{Monte Carlo Dropout}
+\subsection{Monte Carlo (MC) Dropout}
 
 For uncertainty quantification, I implemented the Monte Carlo (MC) Dropout technique. Dropout is a regularization method 
 used during the training of neural networks to prevent overfitting. It works by randomly "dropping out" a subset of neurons 
@@ -233,7 +233,7 @@ the MC Dropout technique for one of the validation images.
 \end{itemize}
 \vspace{1em}
 
-\subsection{Activation Functions}
+\subsection{Different Activation Functions with MC Dropout}
 
 Activation functions play a crucial role in the learning and representation capabilities of neural networks. They introduce 
 non-linearity, enabling the network to learn complex patterns. Each activation function has its unique characteristics and 
@@ -266,4 +266,17 @@ From the results in Table 1, we observe that the ReLU activation function perfor
 Good thing we used ReLU as the activation function in our model for the MC Dropout uncertainity quantification, as it is 
 the best performing activation function in this case.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../images/activation_funcs/activation_funcs_predictions.png}
+    \caption{Sample predictions using different activation functions.}
+    \label{fig:activation_functions_predictions}
+\end{figure}
+\vspace{1em}
+
+Figure 6 shows that ReLU and Leaky ReLU provide the best performance for the predictions. Both functions result in mean 
+predictions with high contrast and clear definition, while also exhibiting lower uncertainty in the prediction maps. 
+This indicates more reliable and confident predictions, crucial for precise satellite image analysis. In contrast, ELU, 
+Swish, and GELU show higher uncertainty and more blurring in the mean predictions, especially when considering various 
+diverse backgrounds, suggesting they are less effective for this specific task.
 \end{document}

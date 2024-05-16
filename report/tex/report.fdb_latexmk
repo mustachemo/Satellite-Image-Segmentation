@@ -1,11 +1,12 @@
 # Fdb version 4
-["pdflatex"] 1715842357 "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" "report.pdf" "report" 1715842358 0
+["pdflatex"] 1715844306 "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" "report.pdf" "report" 1715844307 0
   "../images/MC_dropout/test_image[0-5].png" 1715835943 789003 63e19bb5c1edee5f6df6b3267bd82eaa ""
+  "../images/activation_funcs/activation_funcs_predictions.png" 1715843989 510752 5fa390838ae03dd885ed9b23ec57f4e3 ""
   "../images/original_input_sample.png" 1715835943 298462 5a5a0aac2a5aee5532d08956aad294ec ""
   "../images/output_sample.png" 1715835943 314929 76bd5080237bcfe0c5b637630dcb9d9d ""
   "../images/processed_input_sample.png" 1715835943 430470 773bb768c66ec92047e97c3bf886f444 ""
   "../images/unet.png" 1715835943 197239 fea08dfbb0f83798f1ac2fdb249005cf ""
-  "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" 1715842357 14026 80804fea62a2a5b186352cb7aa7049d2 ""
+  "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" 1715844304 14913 076b87d794f885f1751aba4667097b27 ""
   "c:/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1694840883 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1694843618 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1694843095 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -75,8 +76,8 @@
   "c:/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1694848488 4721891 a1ad6110735ab1e410b2de96572ab420 ""
   "c:/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1694848631 8183611 4e3b9b35c1859d504ded30a33183700d ""
   "c:/texlive/2023/texmf.cnf" 1694848468 713 e69b156964470283e0530f5060668171 ""
-  "report.aux" 1715842358 2935 ac9501d7a6f7c2db8de08d3b8ec9927a "pdflatex"
-  "report.tex" 1715842357 14026 80804fea62a2a5b186352cb7aa7049d2 ""
+  "report.aux" 1715844307 3243 d4b6c97809d47b2e322c27bc6d94f59b "pdflatex"
+  "report.tex" 1715844304 14913 076b87d794f885f1751aba4667097b27 ""
   (generated)
   "report.aux"
   "report.log"
