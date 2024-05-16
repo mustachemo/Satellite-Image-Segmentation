@@ -9,11 +9,12 @@
 
 \title{Uncertainty Quantification for Satellite Image Segmentation}
 \author{Mohamed Hasan}
-\date{\today}
+\date{May 14, 2024}
 
 \begin{document}
 \maketitle
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 This report details the development and evaluation of a custom Artificial Neural Network (ANN) 
 designed for image segmentation tasks. I focus on a UNet model architecture, built from scratch 
@@ -32,10 +33,10 @@ and the presence of objects (i.e. astroids).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dataset}
-The dataset consists of satellite images and corresponding masks of size $1280 \times 720$, with each 
+The dataset consists of 3117 satellite images and corresponding masks of size $1280 \times 720$, with each 
 mask delineating the satellite from the background. The images are of varying resolutions and quality, 
 reflecting the diversity of satellite imagery encountered in real-world scenarios. The dataset is divided 
-into training and validation sets, with the training set containing 3117 images and the validation set
+into training and validation sets, with the training set containing 2517 images and the validation set
 comprising 600 images. The masks are categorized into fine and coarse masks, with 403 fine masks
 and 2114 coarse masks in the training set. The dataset presents a challenging segmentation task due
 to the presence of complex textures, varying lighting conditions, and the need to accurately
@@ -48,6 +49,7 @@ delineate the satellite from the background.
     \label{fig:original_dataset}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data Preprocessing}
 
 The dataset undergoes preprocessing to ensure uniformity and compatibility with the model. The images
@@ -102,6 +104,7 @@ The model architecture is defined in the file \texttt{unet.py} in the \texttt{mo
 is nearly identical to the standard UNet architecture. We add dropout layers after each convolutional layer
 in the encoder and decoder, so that we may experiment with Monte Carlo Dropout for uncertainty quantification.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Loss Function, Metrics, and Hyperparameters}
 
 The loss function used for training the model is a combination of Binary Cross Entropy (BCE) and Dice Loss.
@@ -233,13 +236,30 @@ the MC Dropout technique for one of the validation images.
 \end{itemize}
 \vspace{1em}
 
+The results show that the mean predictions generally capture the satellite structures well. However, when it comes to the 
+edges and the finer details, uncertainty is observed. Notably, significant uncertainty for similar colors or textures - 
+take the overlap of the water and satellite in the first test image, or the solar panels against the blue ocean in the 
+second one. And when the model mistakes asteroids for satellites in the fourth test image, the uncertainty increases 
+even more. This shows where the model's weak spots are, most likely due to a lack of training examples. Overall, MC Dropout 
+does a great job of pointing out the low confidence areas. This gives us a clear direction for improving the model's robustness 
+and reliability - by focusing on these high-uncertainty areas.
+\vspace{1em}
+
+Potential improvements could include increasing the number of training examples, augmenting the dataset with more diverse
+images, or fine-tuning the model architecture to better capture the distinguishing features of the satellite. However, 
+since we are focusing on uncertainity quantification in this report, I suggest combinning uncertainity quantification
+methods. For example, we could use Bayesian Neural Networks to capture the model's uncertainty in the weights, and then
+use MC Dropout to capture the uncertainty in the predictions. This would give us a more comprehensive view of the model's
+uncertainty and help us make more informed decisions.  I impelmented a Bayesian UNet model with Dropout, but could not 
+train it due to computational limitations.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Different Activation Functions with MC Dropout}
 
-Activation functions play a crucial role in the learning and representation capabilities of neural networks. They introduce 
-non-linearity, enabling the network to learn complex patterns. Each activation function has its unique characteristics and 
-impacts the model's convergence and generalization in different ways. By evaluating multiple activation functions, we aim 
-to identify which ones contribute most effectively to the accuracy and robustness of our segmentation model.
-
+Let's now test a few activation functions to see how they effect uncertainity quantification. Each activation function has 
+its unique characteristics and impacts the model's convergence and generalization in different ways. By evaluating multiple 
+activation functions, I aim to identify which ones achieve low uncertainty and high accuracy in the segmentation task.
 
 \begin{table}[h!]
     \centering

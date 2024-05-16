@@ -26,7 +26,7 @@ def train_unet(train_images, train_masks, test_images, test_masks):
         # montior dice coefficient
         checkpoint = ModelCheckpoint(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5', monitor='val_dice_coefficient', save_best_only=True, mode='max')
         tensorboard = TensorBoard(log_dir='logs')
-        csv_logger = CSVLogger('logs/training.log')
+        csv_logger = CSVLogger(f'logs/model_{DROPOUT_RATE}_{ACTIVATION_FUNC}_training.log')
 
         # Train the model
         model.fit(train_images, train_masks, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
