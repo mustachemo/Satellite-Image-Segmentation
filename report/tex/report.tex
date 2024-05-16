@@ -4,6 +4,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \title{Uncertainty Quantification for Satellite Image Segmentation}
 \author{Mohamed Hasan}
@@ -28,6 +29,7 @@ a challenging real-world scenario due to factors like variable lighting conditio
 and the presence of objects (i.e. astroids).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dataset}
 The dataset consists of satellite images and corresponding masks of size $1280 \times 720$, with each 
 mask delineating the satellite from the background. The images are of varying resolutions and quality, 
@@ -78,7 +80,7 @@ do not exist, the function is called to create them. Now, let's look at the proc
 \end{figure}
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Model Architecture}
 The model architecture is based on the UNet architecture, a popular choice for image segmentation tasks
 due to its ability to capture both local and global features effectively. The model consists of an encoder
@@ -99,7 +101,7 @@ The model architecture is defined in the file \texttt{unet.py} in the \texttt{mo
 is nearly identical to the standard UNet architecture. We add dropout layers after each convolutional layer
 in the encoder and decoder, so that we may experiment with Monte Carlo Dropout for uncertainty quantification.
 
-\subsection{Loss Function and Metrics}
+\subsection{Loss Function, Metrics, and Hyperparameters}
 
 The loss function used for training the model is a combination of Binary Cross Entropy (BCE) and Dice Loss.
 The BCE loss is effective in handling class imbalance, while the Dice Loss directly optimizes for the Dice
@@ -114,73 +116,124 @@ Coefficient, a common metric in image segmentation tasks. The Dice Coefficient i
 \text{Dice Loss} = 1 - \text{Dice Coefficient},
 \]
 
-Where \( y_i \) is the ground truth label, \( p_i \) is the predicted probability, and \( N \) is the total number of pixels. 
-The intersection is the number of overlapping pixels between the predicted and ground truth masks, and the union is the total 
-number of pixels in both masks. The BCE loss is given by
+Where \( y_i \) is the ground truth label, \( p_i \) is the predicted probability, and \( N \) is the total 
+number of pixels. The intersection is the number of overlapping pixels between the predicted and ground truth 
+masks, and the union is the total number of pixels in both masks. The BCE loss is given by
 
 \[
 \text{BCE} = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(p_i) + (1 - y_i) \log(1 - p_i)],
 \]
 
-A combined loss function is used to leverage the strengths of both BCE and Dice Loss. The model is trained using
-the Adam optimizer with a learning rate of 0.001. The metrics used for evaluation are the Dice Coefficient and Accuracy.
-
-
-
-
-
-
-\subsection{Training and Evaluation}
-
-The training configuration involved using a combination of Binary Cross Entropy (BCE) and Dice Loss 
-as the loss function. The BCE loss, given by
+A combined loss function is used to leverage the strengths of both BCE and Dice Loss.
 
 \[
-\text{BCE} = -\frac{1}{N} \sum_{i=1}^{N} [y_i \log(p_i) + (1 - y_i) \log(1 - p_i)],
+\text{Combined Loss} = \text{BCE} + \text{Dice Loss}.
 \]
 
-where \( y_i \) is the ground truth label and \( p_i \) is the predicted probability, effectively 
-handles the class imbalance inherent in segmentation tasks. The Dice Loss, formulated as
+The model is trained using the Adam optimizer with a learning rate of 0.001. The metrics used for evaluation 
+are the Dice Coefficient and Accuracy.
 
 \[
-\text{Dice Loss} = 1 - \frac{2 \sum_{i=1}^{N} y_i p_i}{\sum_{i=1}^{N} y_i + \sum_{i=1}^{N} p_i},
+\text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
 \]
+\vspace{1em}
 
-complements the BCE loss by directly optimizing for the Dice Coefficient, a common metric in image 
-segmentation.
+The hyperparameters and model configurations are defined in the file \texttt{config.py} in the \texttt{model} folder.
+The file contains the following hyperparameters:
+ 
+\begin{itemize}
+    \item \textbf{BATCH\_SIZE} = 1: The batch size used for training the model.
+    \item \textbf{EPOCHS} = 5: The number of epochs for training.
+    \item \textbf{DROPOUT\_RATE} = 0.35: The dropout rate used in the model.
+\end{itemize}
 
-To evaluate the model’s performance, I employed the Dice Coefficient and Accuracy as metrics. The 
-dataset was divided into training and validation sets, with the training set comprising 3116 images 
-(403 with fine masks and 2114 with coarse masks) and the validation set consisting of 600 images 
-with fine masks.
+\subsection{Evaluation}
+The final model achieved:
+\begin{itemize}
+    \item Loss: 0.598
+    \item Accuracy: 0.868
+    \item Dice Coefficient: 0.646
+\end{itemize}
 
-The final model achieved a loss of 0.598, an accuracy of 0.868, and a Dice Coefficient of 0.646 on 
-the validation set.
+The model shows good performance on the validation set, with high accuracy and a reasonable Dice Coefficient, 
+despite the challenging nature of the dataset and the low number of epochs. Let's visualize the model's 
+predictions on a sample image from the validation set.
 
-For uncertainty quantification, I implemented Monte Carlo (MC) Dropout. By incorporating dropout 
-layers with a dropout rate of 0.35 during inference and performing multiple forward passes, I generated 
-a distribution of predictions for each input image. This approach allowed me to compute the mean prediction 
-and the standard deviation for each pixel, providing insights into the model’s confidence. The mean 
-prediction is given by
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../images/output_sample.png}
+    \caption{Sample image from the validation set with the model's predictions.}
+    \label{fig:sample_predictions}
+\end{figure}
+
+The model successfully segments the satellite from the background, capturing the main features of the satellite
+with a dice coefficient of 0.8379. Notice however that the model captures the details of the satellite which we 
+did not include in the masks. This is due to the model's ability to learn from the training data and generalize.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Uncertainty Quantification}
+\subsection{Monte Carlo Dropout}
+
+For uncertainty quantification, I implemented the Monte Carlo (MC) Dropout technique. Dropout is a regularization method 
+used during the training of neural networks to prevent overfitting. It works by randomly "dropping out" a subset of neurons 
+during each forward pass, effectively creating an ensemble of different network architectures. Typically, dropout is 
+disabled during inference to use the full capacity of the trained model. However, in MC Dropout, dropout is kept active 
+during inference to introduce stochasticity into the model's predictions.
+
+By incorporating dropout layers with a dropout rate of 0.35 during inference and performing multiple forward passes 
+(in this case, 10 passes), I generated a distribution of predictions for each input image. This approach allowed me to 
+capture the variability in the model's predictions due to the stochastic dropout, which can be interpreted as a measure of 
+uncertainty.
+
+The mean prediction for each pixel is calculated as follows:
 
 \[
 \mu(x) = \frac{1}{T} \sum_{t=1}^{T} \hat{y}_t(x),
 \]
 
-where \( \hat{y}_t(x) \) is the prediction at the \( t \)-th forward pass and \( T \) is the number of 
-passes. The uncertainty is quantified as the standard 
-deviation of these predictions,
+where \( \hat{y}_t(x) \) is the prediction at the \( t \)-th forward pass and \( T \) is the number of passes. The mean 
+prediction provides an aggregate view of the model's output across multiple passes.
+
+The uncertainty is quantified as the standard deviation of these predictions:
 
 \[
 \sigma(x) = \sqrt{\frac{1}{T} \sum_{t=1}^{T} (\hat{y}_t(x) - \mu(x))^2}.
 \]
+
+This standard deviation reflects the model's confidence in its predictions. A higher standard deviation indicates greater 
+uncertainty, whereas a lower standard deviation suggests higher confidence. 
+
+MC Dropout is particularly useful for identifying regions where the model is less certain about its predictions. In the 
+context of image segmentation, uncertainty is often higher around the edges of objects and in regions with complex textures. 
+Figure 4 the uncertainty maps generated by the MC Dropout technique for one of the validation images.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../images/MC_dropout/test_image[0].png}
+    \caption{Sample image from the validation set.}
+    \label{fig:mc_dropout_single_image}
+\end{figure}
+\vspace{1em}
+This information can be crucial for applications where decision-making depends on the reliability of the model's predictions, 
+such as in medical imaging or space object detection.
+
+By using MC Dropout, I could not only make predictions but also quantify the confidence in these predictions, making the 
+model more robust and reliable for real-world applications.
+
+
+
+
+
+
+
+
+
 
 This method enabled me to identify areas with high uncertainty, particularly around object boundaries 
 and regions with complex textures.
 
 
 
-\section{Uncertainty Quantification}
-\subsection{Monte Carlo Dropout}
+
 
 \end{document}

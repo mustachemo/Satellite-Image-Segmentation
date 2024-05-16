@@ -2,6 +2,7 @@ import json
 import matplotlib.pyplot as plt
 from PIL import Image, ImageDraw
 from pathlib import Path
+from .custom_funcs import dice_coefficient
 
 def load_image_and_mask(image_index):
     """
@@ -80,17 +81,19 @@ def visualize_train_sample(train_images, train_masks):
 
     plt.show()
 
-def visualize_test_sample(test_images, test_masks, predictions):
+def visualize_test_sample(test_image, test_mask, prediction):
     """
     Visualize a sample image, mask and prediction.
     """
     fig, ax = plt.subplots(1, 3, figsize=(15, 7))
 
-    ax[0].imshow(test_images)
+    ax[0].imshow(test_image)
     ax[0].set_title('Image')
-    ax[1].imshow(test_masks, cmap='gray')
+    ax[1].imshow(test_mask, cmap='gray')
     ax[1].set_title('Mask')
-    ax[2].imshow(predictions, cmap='gray')
+    ax[2].imshow(prediction, cmap='gray')
     ax[2].set_title('Predicted Mask')
+
+    fig.text(0.5, 0.1, f'Dice Coefficient: {dice_coefficient(test_mask, prediction):.4f}', ha='center', fontsize=12)
 
     plt.show()
