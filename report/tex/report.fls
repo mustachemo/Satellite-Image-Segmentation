@@ -126,11 +126,11 @@ INPUT ../images/output_sample.png
 INPUT ../images/output_sample.png
 INPUT ../images/output_sample.png
 INPUT ../images/output_sample.png
-INPUT ../images/MC_dropout/test_image[0].png
-INPUT ../images/MC_dropout/test_image[0].png
-INPUT ../images/MC_dropout/test_image[0].png
-INPUT ../images/MC_dropout/test_image[0].png
-INPUT ../images/MC_dropout/test_image[0].png
+INPUT ../images/MC_dropout/test_image[0-5].png
+INPUT ../images/MC_dropout/test_image[0-5].png
+INPUT ../images/MC_dropout/test_image[0-5].png
+INPUT ../images/MC_dropout/test_image[0-5].png
+INPUT ../images/MC_dropout/test_image[0-5].png
 INPUT report.aux
 INPUT c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT c:/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb

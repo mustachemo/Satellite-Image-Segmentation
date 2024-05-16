@@ -18,8 +18,6 @@ from uncertainty_quantification.MC_dropout import (
 
 if __name__ == '__main__':
 
-    visualize('466')
-
     logger = get_logger(__name__)
 
     # Load the model and test data
