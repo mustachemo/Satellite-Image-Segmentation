@@ -55,13 +55,13 @@ def visualize(image_index):
 
     # Display the image and mask
     ax[0].imshow(image)
-    ax[0].set_title('Image + Bounding Box')
+    ax[0].set_title('Image')
 
     ax[1].imshow(mask)
     ax[1].set_title('Mask')
 
-    # Draw bounding boxes on the image
-    image = draw_bboxes_on_image(image, image_bboxes)
+    # # Draw bounding boxes on the image
+    # image = draw_bboxes_on_image(image, image_bboxes)
 
     ax[0].imshow(image)
 

@@ -1,12 +1,12 @@
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
 from configs import PREPPED_TEST_IMAGES, PREPPED_TEST_MASKS, DROPOUT_RATE, NUM_SAMPLES_MC_DROPOUT_PREDICTION, GRID_ITERATIONS
 from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.logger_prep import get_logger
+from utils.visualize import visualize
 
-from uncertainity_quantification.MC_dropout import (
+from uncertainty_quantification.MC_dropout import (
     mc_dropout_predictions, 
     visualize_mean_std, 
     visualize_confidence_intervals, 
@@ -17,6 +17,8 @@ from uncertainity_quantification.MC_dropout import (
 )
 
 if __name__ == '__main__':
+
+    visualize('466')
 
     logger = get_logger(__name__)
 

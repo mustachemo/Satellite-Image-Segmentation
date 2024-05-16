@@ -1,6 +1,5 @@
 import tensorflow as tf
 import numpy as np
-import logging
 
 from utils.directories_check import check_dirs, check_prepped_data
 from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
