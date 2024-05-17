@@ -97,3 +97,5 @@ def visualize_test_sample(test_image, test_mask, prediction):
     fig.text(0.5, 0.1, f'Dice Coefficient: {dice_coefficient(test_mask, prediction):.4f}', ha='center', fontsize=12)
 
     plt.show()
+
+

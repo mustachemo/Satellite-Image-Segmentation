@@ -3,6 +3,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from utils.logger_prep import get_logger
 from configs import X_DIMENSION, Y_DIMENSION
+from utils.custom_funcs import dice_coefficient
 
 logger = get_logger(__name__)
 
@@ -62,6 +63,9 @@ def mc_dropout_predictions(model, input_image, num_samples=50):
 
 def visualize_mean_std(test_image, test_mask, mean_prediction, std_deviation):
     """ Visualize the test i mage, mask and model predictions. """
+
+    dice = dice_coefficient(test_mask, mean_prediction)
+
     plt.figure(figsize=(10, 10))
     
     # Display the actual test image
@@ -87,6 +91,8 @@ def visualize_mean_std(test_image, test_mask, mean_prediction, std_deviation):
     plt.imshow(std_deviation[0, :, :, 0], cmap='gray')
     plt.colorbar()
     plt.title('Prediction Uncertainty (std)')
+
+    plt.suptitle(f'Dice Coefficient: {dice:.4f}', fontsize=16)
     
     plt.show()
 
@@ -131,7 +137,7 @@ def visualize_mean_std_grid(test_images, test_masks, predictions, rows=4, cols=5
     plt.show()
 
 
-def visualize_mean_std_grid_multi_models(test_images, test_masks, predictions, rows=4, cols=5, activation_funcs=None):
+def visualize_mean_std_grid_multi_models(test_images, test_masks, predictions, rows=4, cols=5, titles=None):
     """
     Visualize the test images, masks, mean predictions, and uncertainty across multiple samples.
     
@@ -153,7 +159,7 @@ def visualize_mean_std_grid_multi_models(test_images, test_masks, predictions, r
             
             if j == 0:  # First row - Test Image
                 im = ax.imshow(test_images)
-                ax.set_title(f'{activation_funcs[i]}')
+                ax.set_title(f'{titles[i]}')
             elif j == 1:  # Second row - Test Mask
                 im = ax.imshow(test_masks, cmap='gray')
                 ax.set_title(f'Test Mask')

@@ -33,7 +33,7 @@ def train_unet(train_images, train_masks, test_images, test_masks):
         logger.info('Training complete for UNet model')
 
 def train_bayesian_unet(train_images, train_masks, test_images, test_masks):
-    if Path(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5').exists():
+    if Path(f'checkpoints/bayesian_unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5').exists():
         logger.info('Model already exists, exiting...')
         pass
     else:
@@ -42,7 +42,7 @@ def train_bayesian_unet(train_images, train_masks, test_images, test_masks):
         model.compile(optimizer='adam', loss=combined_loss_bayesian_unet, metrics=['accuracy', dice_coefficient])
 
         # Callbacks
-        checkpoint = ModelCheckpoint(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5', monitor='val_dice_coefficient', save_best_only=True, mode='max')
+        checkpoint = ModelCheckpoint(f'checkpoints/bayesian_unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5', monitor='val_dice_coefficient', save_best_only=True, mode='max')
         tensorboard = TensorBoard(log_dir='logs')
         csv_logger = CSVLogger('logs/training.log')
 

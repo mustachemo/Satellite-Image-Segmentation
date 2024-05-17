@@ -58,6 +58,7 @@ if __name__ == '__main__':
     # Visualize the mean and standard deviation for GRID_ITERATIONS number of test images
     # predictions = np.array([mc_dropout_predictions(model, test_image, num_samples=NUM_SAMPLES_MC_DROPOUT_PREDICTION) for test_image in test_images[:GRID_ITERATIONS]])
     # visualize_mean_std_grid(test_images[:GRID_ITERATIONS], test_masks[:GRID_ITERATIONS], predictions, rows=4, cols=GRID_ITERATIONS)
+    # logger.info('Uncertainty quantification for MC dropout complete')
 
 
     #######################################################################
@@ -77,8 +78,28 @@ if __name__ == '__main__':
     #     mc_predictions = mc_dropout_predictions(model, test_images[0], num_samples=NUM_SAMPLES_MC_DROPOUT_PREDICTION)
     #     predictions_for_all_models.append(mc_predictions)
 
-
     # visualize_mean_std_grid_multi_models(test_images[0], test_masks[0], np.array(predictions_for_all_models), rows=4, cols=len(activation_funcs), activation_funcs=activation_funcs)
+    # logger.info('Uncertainty quantification for multiple models complete')
 
+    #######################################################################
+    # Uncertainty quantification using MC dropout with ensemble of models #
+    #######################################################################
+    combined_predictions = []
+    for model_num in range(5):
+        try: 
+            model = tf.keras.models.load_model(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}_{model_num+1}.h5', custom_objects={'dice_loss': dice_loss, 'dice_coefficient': dice_coefficient, 'combined_loss': combined_loss})
+            logger.info('Model loaded successfully')
+        except Exception as e:
+            logger.error(f'Model not found, please train the model first: {e}')
+            exit()
 
-    logger.info('Uncertainty quantification experiment complete')
+        # Perform MC dropout inference on a single image for each model
+        mc_predictions = mc_dropout_predictions(model, test_images[0], num_samples=NUM_SAMPLES_MC_DROPOUT_PREDICTION)
+        mc_predictions = np.mean(mc_predictions, axis=0)
+        combined_predictions.append(mc_predictions)
+
+    mean_prediction = np.mean(combined_predictions, axis=0)
+    std_deviation = np.std(combined_predictions, axis=0)
+    visualize_mean_std(test_images[0], test_masks[0], mean_prediction, std_deviation)
+
+    logger.info('Uncertainty quantification for ensemble of models complete')
