@@ -24,7 +24,7 @@ on satellite images.
 
 To experiment with the reliability of the model predictions, I implement Monte Carlo (MC) Dropout as a 
 primary method for uncertainty quantification. Additionally, I explore and employ various other uncertainity quantification 
-methods, including different activation functions, ensemble methods, and uncertainity-aware loss functions, to further 
+methods, including different activation functions, ensemble method, and an uncertainity-aware loss function, to further 
 assess and quantify uncertainty. This approach allows me to evaluate the confidence of the model’s predictions, providing 
 valuable insights into the reliability of segmentation results.
 
@@ -36,9 +36,9 @@ mask delineating the satellite from the background. The images are of varying re
 reflecting the diversity of satellite imagery encountered in real-world scenarios. The dataset is divided 
 into training and validation sets, with the training set containing 2517 images and the validation set
 comprising 600 images. The masks are categorized into fine and coarse masks, with 403 fine masks
-and 2114 coarse masks in the training set. The dataset presents a challenging segmentation task due
-to the presence of complex textures, varying lighting conditions, and the need to accurately
-delineate the satellite from the background.
+and 2114 coarse masks in the training set, the validation set contains all fine masks. The dataset presents a 
+challenging segmentation task due to the presence of complex textures, varying lighting conditions, and the 
+need to accurately delineate the satellite from the background.
 
 \begin{figure}[h]
     \centering
@@ -51,10 +51,10 @@ delineate the satellite from the background.
 \subsection{Data Preprocessing}
 
 The images
-are resized to a fixed resolution of $256 \times 256$ pixels and The masks are converted to binary format, with 
+are resized to a fixed resolution of $256 \times 256$ pixels and the masks are converted to binary format, with 
 pixel values of 0 and 1 representing the background and satellite, respectively, to reduce computational
-complexity. The preprocessed dataset has the same split between training and validation sets as the 
-original dataset.
+complexity, since my computer has limited memory. The preprocessed dataset has the same split between training 
+and validation sets as the original dataset.
 \vspace{1em}
 
 The file \texttt{data\_loader\_unit.py} in the \texttt{utils} folder contains the function 
@@ -93,7 +93,7 @@ implementation details can be found in the model definition.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{../images/unet.png}
-    \caption{Original UNet model architecture. I use a similar architecture with dropout layers for uncertainty quantification.} 
+    \caption{Original UNet model architecture. I use the same architecture, but with dropout layers for uncertainty quantification.} 
     \label{fig:unet_architecture}
 \end{figure}
 \vspace{1em}

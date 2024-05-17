@@ -1,6 +1,6 @@
 ## Turion Space assessment
 
-This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to image segmenetation tasks using a UNet CNN architecture. The goal is to leverage dropout layers and other uncertainity qunatifications to measure prediction uncertainty.
+This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to image segmenetation tasks using a UNet CNN architecture. The goal is to leverage dropout layers and other uncertainity quantifications to measure prediction uncertainty.
 
 - [Turion Space assessment](#turion-space-assessment)
 - [Installation](#installation)
@@ -57,6 +57,7 @@ pip install -r requirements.txt
 3. Run `train.py` to train the model (The prepped data used for the training will be automatically generated and saved in the `prepped_data/` directory when running the training script).
 4. Run `predict.py` to make predictions on the validation dataset.
 5. Run `main.py` to run the experiments and generate the report.
+   - Not all experiments are uncommented in the `main.py` file. You can uncomment further experiments you want to run.
 
 ```bash
 python train.py
@@ -73,13 +74,13 @@ The satellite dataset is primarly for object detection and segmentation using bo
 **Dataset Details**
 
 - Images with index 0-1002 have fine masks, while images from index 1003-3116 have coarse masks.
-- Training data includes 403 fine masks from index 0-402 and 2114 coarse masks from index 1003-3116.
+- Training data includes 403 fine masks from index 0-402 and 2114 coarse masks from index 1003-3116, totaling 2517 images.
 - The validation dataset includes 600 images with fine masks indexed from 403 to 1002.
 - the file `all_bbox.txt` includes bounding boxes of all satellites inside the dataset based on segmentation masks. It's in the form of a dictionary with the index of images as the key. Each bounding box has the format [max_x, max_y, min_x, min_y].
 
 ## Information
 
-- `model/bayesian_unet.py`: This attempts to implement a Bayesian U-Net model using MC Dropout. I couldn't get the model to train because of memory constraints.
+- `model/bayesian_unet.py`: This attempt was to implement a Bayesian U-Net model using MC Dropout. I couldn't get the model to train because of memory constraints.
 
 ## Acknowledgements
 
@@ -90,7 +91,7 @@ The satellite dataset is primarly for object detection and segmentation using bo
 
 ### MC Dropout
 
-- [Yarin Gal](http://www.cs.ox.ac.uk/people/yarin.gal/website/index.html)
+- [Yarin Gal](https://www.cs.ox.ac.uk/people/yarin.gal/website/blog_3d801aa532c1ce.html)
 
 ### Further UQ in Deep Learning
 
