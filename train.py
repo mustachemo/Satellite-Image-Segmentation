@@ -7,7 +7,7 @@ from model.unet import build_unet_model
 from model.bayesian_unet import build_bayesian_unet_model
 from utils.visualize import visualize_train_sample
 from utils.logger_prep import get_logger
-from utils.custom_funcs import dice_coefficient, combined_loss, combined_loss_bayesian_unet
+from utils.custom_funcs import dice_coefficient, combined_loss, combined_loss_bayesian_unet, uncertainty_aware_loss
 from utils.directories_check import check_dirs, check_prepped_data
 from configs import *
 
@@ -20,7 +20,7 @@ def train_unet(train_images, train_masks, test_images, test_masks):
     else:
         logger.info('Model not found, creating and training...')
         model = build_unet_model(dropout_rate=DROPOUT_RATE)
-        model.compile(optimizer='adam', loss=combined_loss, metrics=['accuracy', dice_coefficient])
+        model.compile(optimizer='adam', loss=uncertainty_aware_loss, metrics=['accuracy', dice_coefficient])
 
         # Callbacks
         # montior dice coefficient

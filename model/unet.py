@@ -2,7 +2,6 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Model
 from configs import X_DIMENSION, Y_DIMENSION, ACTIVATION_FUNC
 
-
 def downsample_block(input_tensor, num_filters, dropout_rate=0.1):
     """Block for downsampling: Convolution -> Batch Normalization -> ReLU -> Convolution -> Batch Normalization -> ReLU -> Max Pooling"""
     x = layers.Conv2D(num_filters, (3, 3), padding='same')(input_tensor)

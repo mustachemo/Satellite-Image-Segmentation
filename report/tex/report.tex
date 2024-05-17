@@ -300,7 +300,7 @@ Swish, and GELU show higher uncertainty and more blurring in the mean prediction
 diverse backgrounds, suggesting they are less effective for this specific task.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Ensemble Method}
+\subsection{Ensemble of 5 Models with MC Dropout}
 
 To further improve the model's uncertainty quantification, I experimented with ensemble methods.In this approach, we train 
 multiple models using the same architecture but with different initializations and stochastic variations during training. 
@@ -326,8 +326,39 @@ learned patterns and limited diversity in their predictions. This suggests that 
 incorporating data augmentation or using different subsets of the data for training each model may be necessary to increase 
 the variability and robustness of the ensemble.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Uncertainty-Aware Loss Function}
 
+For this experiment, we will incorporate uncertainty estimates directly into the loss function, allowing the model 
+to pay more attention to regions where it is less confident. I expect this approach to be useful, especially in tasks like 
+image segmentation, where accurate delineation of objects is crucial, and regions of high uncertainty often correspond to 
+areas that are challenging for the model.
+\vspace{1em}
 
+By penalizing these uncertain predictions more heavily during training, we can guide the model to learn more robust 
+and reliable features. The uncertainty-aware loss is calculated by multiplying the base loss with a factor that 
+incorporates the uncertainty, weighted by a hyperparameter \(\lambda\).
+
+The formula for the uncertainty-aware loss is given by:
+
+\[
+\text{Uncertainty-Aware Loss} = \text{Mean} \left( (\text{BCE} + \text{Dice Loss}) \times (1 + \lambda \times \text{Uncertainty}) \right)
+\]
+
+where BCE is the Binary Crossentropy loss and Uncertainty is the standard deviation of the predictions. 
+\(\lambda\) is a hyperparameter that controls the influence of the uncertainty term on the overall loss.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../images/uncertainity aware loss funcs/diff_lambvda_values_graph.png}
+    \caption{Validation dice coefficient for different values of the hyperparameter \(\lambda\).}
+    \label{fig:uncertainty_aware_loss}
+\end{figure}
+
+from figure 8, we can see that the addition of the uncertainty-aware loss function using differnt values of \(\lambda\)
+did not improve the model's performance. The dice coefficient of the best performing model (\(\lambda = 0.1\)) is 0.798, 
+which is slightly lower than the dice coefficient of the base model at 0.803. We can conclude that the uncertainty-aware
+loss function did not provide a significant improvement in this case.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -338,6 +369,12 @@ provides significant insights into our model's uncertainty. These methods collec
 for uncertainty quantification, allowing us to measure and understand the confidence of our model's predictions 
 effectively. By analyzing the variability and consistency across different models and configurations, we gain a deeper 
 understanding of the model's strengths and areas for improvement. This approach to uncertainty quantification is crucial 
-for enhancing the robustness and reliability of models that depend on accurate predictions.
+for enhancing the reliability of models that depend on accurate predictions.
+\vspace{1em}
+
+It is a shame that the bayesian UNet model could not be trained due to computational limitations. This model would have
+provided a more comprehensive view of the model's uncertainty by capturing the uncertainty in the weights. 
+This would have allowed us to make more informed decisions. It is very interesting and I will definitely 
+explore this further in the future.
 
 \end{document}
