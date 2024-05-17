@@ -20,7 +20,7 @@ def train_unet(train_images, train_masks, test_images, test_masks):
     else:
         logger.info('Model not found, creating and training...')
         model = build_unet_model(dropout_rate=DROPOUT_RATE)
-        model.compile(optimizer='adam', loss=uncertainty_aware_loss, metrics=['accuracy', dice_coefficient])
+        model.compile(optimizer='adam', loss=combined_loss, metrics=['accuracy', dice_coefficient])
 
         # Callbacks
         # montior dice coefficient

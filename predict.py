@@ -17,11 +17,11 @@ def prediction_for_single_model(test_images, test_masks, activation_fun=ACTIVATI
         exit()
 
     # Predict and show results
-    # logger.info('Predicting test images')
-    # predictions = model.predict(test_images)
+    logger.info('Predicting test images')
+    predictions = model.predict(test_images)
 
-    # for i in range(1):
-    #     visualize_test_sample(test_images[i], test_masks[i], predictions[i])
+    for i in range(5):
+        visualize_test_sample(test_images[i], test_masks[i], predictions[i])
 
     # Evaluate the model
     logger.info('Evaluating model')
@@ -40,10 +40,10 @@ if __name__ == '__main__':
     test_masks = tf.convert_to_tensor(np.load(PREPPED_TEST_MASKS))
 
     # Predict for a single model
-    # prediction_for_single_model(test_images, test_masks, ACTIVATION_FUNC)
+    prediction_for_single_model(test_images, test_masks, ACTIVATION_FUNC)
 
     # Predict for multiple models
-    activation_funcs = ['relu', 'elu', 'swish', 'gelu', 'leaky_relu']
-    for activation_func in activation_funcs:
-        prediction_for_single_model(test_images, test_masks, activation_func)
-        logger.info(f'Prediction complete for model with activation function: {activation_func}')
+    # activation_funcs = ['relu', 'elu', 'swish', 'gelu', 'leaky_relu']
+    # for activation_func in activation_funcs:
+    #     prediction_for_single_model(test_images, test_masks, activation_func)
+    #     logger.info(f'Prediction complete for model with activation function: {activation_func}')

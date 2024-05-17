@@ -9,10 +9,8 @@ def load_and_process_files(image_dir, mask_dir, prefix='train'):
     images = []
     masks = []
     for i in tqdm(range(3117), desc='Prepping images'):
-        # File correspondence check
         file_name = f'img_resize_{i}'
 
-        # Load images
         image_path = os.path.join(image_dir, f'{file_name}.png')
         mask_path = os.path.join(mask_dir, f'{file_name}_mask.png')
 
@@ -24,16 +22,13 @@ def load_and_process_files(image_dir, mask_dir, prefix='train'):
             continue
 
 
-        # Convert to array and normalize
         image = img_to_array(image, dtype=np.float32) / np.max(image)
         mask = img_to_array(mask, dtype=np.float32) / np.max(mask)
         mask[mask > 0.1] = 1.0
 
-        # Convert to tensors
         image = tf.convert_to_tensor(image, dtype=tf.float32)
         mask = tf.convert_to_tensor(mask, dtype=tf.float32)
 
-        # Append to lists
         images.append(image)
         masks.append(mask)
     
