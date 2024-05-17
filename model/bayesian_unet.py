@@ -21,7 +21,7 @@ def downsample_block(input_tensor, num_filters, dropout_rate=0.1):
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     if dropout_rate > 0:
-        x = layers.SpatialDropout2D(dropout_rate)(x)  # Spatial dropout to maintain spatial correlation
+        x = layers.SpatialDropout2D(dropout_rate)(x)
     return x, layers.MaxPooling2D(pool_size=(2, 2))(x)
 
 def double_conv_block(input_tensor, num_filters):

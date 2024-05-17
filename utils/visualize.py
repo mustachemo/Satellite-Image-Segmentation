@@ -54,10 +54,8 @@ def visualize(image_index):
     bboxes = load_bboxes()
     image_bboxes = bboxes.get(image_index, [])
 
-    # Create a figure and axis
     fig, ax = plt.subplots(1, 2, figsize=(15, 7))
 
-    # Display the image and mask
     ax[0].imshow(image)
     ax[0].set_title('Image')
 
@@ -103,21 +101,17 @@ def visualize_test_sample(test_image, test_mask, prediction):
 
 
 def visualize_training_logs():
-    # Step 1: Read the Log Files
     log_files = glob.glob('logs/model_0.35_relu_training_lambda_*.log')
     data = {}
 
     for log_file in log_files:
-        # Extract lambda value from filename (handle potential decimal values correctly)
+
         lambda_value = log_file.split('_')[-1].split('.log')[0]
         
-        # Read the CSV file into a DataFrame
         df = pd.read_csv(log_file)
         
-        # Store the validation dice coefficients
         data[lambda_value] = df['val_dice_coefficient']
 
-    # Step 2: Plot the Validation Dice Coefficients
     plt.figure(figsize=(10, 6))
 
     for lambda_value, val_dice_coefs in data.items():

@@ -3,7 +3,6 @@
 This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to image segmenetation tasks using a UNet CNN architecture. The goal is to leverage dropout layers and other uncertainity qunatifications to measure prediction uncertainty.
 
 - [Turion Space assessment](#turion-space-assessment)
-- [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Primary Files:](#primary-files)
@@ -15,10 +14,6 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Dataset:](#dataset)
   - [MC Dropout](#mc-dropout)
   - [Further UQ in Deep Learning](#further-uq-in-deep-learning)
-
-## Introduction
-
-Uncertainty quantification is crucial in critical applications like space object detection and segmentation. This project aims to implement techniques to measure uncertainty in image segmentation models (UNet) using MC dropout and other UQ techniques.
 
 ## Installation
 
@@ -39,10 +34,10 @@ pip install -r requirements.txt
 
 ### Primary Files:
 
-- `main.py`: The main script to run the experiments.
+- `main.py`: The main script to run the uncertainty experiments.
 - `train.py`: The training script for the U-Net model.
 - `predict.py`: The prediction script for the U-Net model.
-- `configs.py`: The configuration file for the experiments.
+- `configs.py`: Global configuration file for the experiments.
 
 ### Directory Structure:
 
@@ -58,8 +53,8 @@ pip install -r requirements.txt
 ### Running the experiments:
 
 1. Download the dataset from [here](https://github.com/Yurushia1998/SatelliteDataset)
-2. Place the dataset in the `data/` directory.
-3. Run `train.py` to train the model (The prepped data used for the training will be automatically saved in the `prepped_data/` directory when running the training script).
+2. Place the dataset (all files you download from the drive folder) in the `data/` directory.
+3. Run `train.py` to train the model (The prepped data used for the training will be automatically generated and saved in the `prepped_data/` directory when running the training script).
 4. Run `predict.py` to make predictions on the validation dataset.
 5. Run `main.py` to run the experiments and generate the report.
 
@@ -84,7 +79,7 @@ The satellite dataset is primarly for object detection and segmentation using bo
 
 ## Information
 
-- `model/bayesian_unet.py`: This attempts to implement a Bayesian U-Net model using MC Dropout, could not verify if it works because of memory constraints.
+- `model/bayesian_unet.py`: This attempts to implement a Bayesian U-Net model using MC Dropout. I couldn't get the model to train because of memory constraints.
 
 ## Acknowledgements
 

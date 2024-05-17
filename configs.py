@@ -15,7 +15,6 @@ PREPPED_TEST_IMAGES = 'prepped_data/testimages.npy'
 PREPPED_TEST_MASKS = 'prepped_data/testmasks.npy'
 
 # Model paramaeters/hyperparameters
-# Pick from : 0.30, 0.35, 0.40, 0.45, 0.50
 DROPOUT_RATE = 0.35
 BATCH_SIZE = 1
 EPOCHS = 5
