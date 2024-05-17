@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1715933792 "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" "report.pdf" "report" 1715933794 0
+["pdflatex"] 1715935586 "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" "report.pdf" "report" 1715935588 0
   "../images/MC_dropout/test_image[0-5].png" 1715835943 789003 63e19bb5c1edee5f6df6b3267bd82eaa ""
   "../images/activation_funcs/activation_funcs_predictions.png" 1715844516 510752 5fa390838ae03dd885ed9b23ec57f4e3 ""
   "../images/ensemble method/prediction.png" 1715919202 418045 a01a1ba31729dd370638f77f435d1081 ""
@@ -8,7 +8,7 @@
   "../images/processed_input_sample.png" 1715835943 430470 773bb768c66ec92047e97c3bf886f444 ""
   "../images/uncertainity aware loss funcs/diff_lambvda_values_graph.png" 1715932088 92905 db1003cef2dbde1e0bd321616f58ad43 ""
   "../images/unet.png" 1715835943 197239 fea08dfbb0f83798f1ac2fdb249005cf ""
-  "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" 1715933791 22052 4d08b4d4e961c5177275fb4615bb7a81 ""
+  "c:/Users/mhasa/Desktop/Turion-Space-assessment/report/tex/report.tex" 1715935586 22064 20dbb5220c58ffb332a4ecf486acbb5c ""
   "c:/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1694840883 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1694843618 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1694843095 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -78,8 +78,8 @@
   "c:/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1694848488 4721891 a1ad6110735ab1e410b2de96572ab420 ""
   "c:/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1694848631 8183611 4e3b9b35c1859d504ded30a33183700d ""
   "c:/texlive/2023/texmf.cnf" 1694848468 713 e69b156964470283e0530f5060668171 ""
-  "report.aux" 1715933793 4316 b544cd39ac7b8455516cdc2d8396f3ab "pdflatex"
-  "report.tex" 1715933791 22052 4d08b4d4e961c5177275fb4615bb7a81 ""
+  "report.aux" 1715935588 4316 b544cd39ac7b8455516cdc2d8396f3ab "pdflatex"
+  "report.tex" 1715935586 22064 20dbb5220c58ffb332a4ecf486acbb5c ""
   (generated)
   "report.aux"
   "report.log"

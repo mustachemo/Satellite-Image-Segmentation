@@ -18,16 +18,15 @@
 \section{Introduction}
 
 
-This report details the development and evaluation of a custom Artificial Neural Network (ANN) designed for image 
+This report discusses the development and evaluation of a custom Artificial Neural Network (ANN) designed for image 
 segmentation tasks. I focus on a UNet model architecture, built from scratch using TensorFlow 2, to perform segmentation 
 on satellite images. 
 
 To experiment with the reliability of the model predictions, I implement Monte Carlo (MC) Dropout as a 
 primary method for uncertainty quantification. Additionally, I explore and employ various other uncertainity quantification 
-methods, including 
-different activation functions, ensemble methods, and other hyperparameters, to further assess and quantify uncertainty. 
-This approach allows me to evaluate the confidence of the model’s predictions, providing valuable insights 
-into the reliability of segmentation results.
+methods, including different activation functions, ensemble methods, and uncertainity-aware loss functions, to further 
+assess and quantify uncertainty. This approach allows me to evaluate the confidence of the model’s predictions, providing 
+valuable insights into the reliability of segmentation results.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
