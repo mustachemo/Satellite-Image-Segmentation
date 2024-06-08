@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+@tf.keras.utils.register_keras_serializable(package='Custom', name='dice_coefficient')
 def dice_coefficient(y_true, y_pred, smooth=1e-6):
     '''Dice coefficient for binary segmentation'''
     y_true_f = tf.reshape(y_true, [-1])
@@ -8,15 +9,18 @@ def dice_coefficient(y_true, y_pred, smooth=1e-6):
     union = tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f)
     return (2. * intersection + smooth) / (union + smooth)
 
+@tf.keras.utils.register_keras_serializable(package='Custom', name='dice_loss')
 def dice_loss(y_true, y_pred):
     return 1 - dice_coefficient(y_true, y_pred)
 
+@tf.keras.utils.register_keras_serializable(package='Custom', name='bce_dice_loss')
 def combined_loss(y_true, y_pred):
     '''Combined loss function that combines Dice loss with binary cross-entropy'''
     dice = dice_loss(y_true, y_pred)
     bce = tf.keras.losses.binary_crossentropy(y_true, y_pred)
     return dice + bce
 
+@tf.keras.utils.register_keras_serializable(package='Custom', name='uncertainty_aware_loss')
 def uncertainty_aware_loss(y_true, y_pred, lambda_=0.01):
     '''Uncertainty-aware loss function that combines Dice loss with uncertaint
     y'''
