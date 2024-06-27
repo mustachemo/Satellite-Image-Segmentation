@@ -1,8 +1,7 @@
-## Turion Space assessment
+## Uncertainty Quantification in Satellite Image Segmentation
+This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to image segmenetation tasks using a UNet CNN architecture. The goal is to leverage dropout layers and other uncertainity quantifications to measure prediction uncertainty. 
+- There is a report in reports/text/report.pdf that summerizew this project!
 
-This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to image segmenetation tasks using a UNet CNN architecture. The goal is to leverage dropout layers and other uncertainity quantifications to measure prediction uncertainty.
-
-- [Turion Space assessment](#turion-space-assessment)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Primary Files:](#primary-files)
