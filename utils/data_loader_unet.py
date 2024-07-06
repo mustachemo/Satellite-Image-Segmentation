@@ -1,27 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras.utils import load_img # type: ignore
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
 from tqdm import tqdm
-from pathlib import Path
-import matplotlib.pyplot as plt
-
-X_DIMENSION = 256
-Y_DIMENSION = 256
-
-def visualize_sample(image, mask):
-    plt.figure(figsize=(10, 10))
-    plt.subplot(1, 2, 1)
-    plt.imshow(image)
-    plt.title('Image')
-    plt.axis('off')
-    
-    plt.subplot(1, 2, 2)
-    plt.imshow(mask, cmap='gray')
-    plt.title('Mask')
-    plt.axis('off')
-    plt.show()
-    
-    plt.close()
+from configs import X_DIMENSION, Y_DIMENSION
 
 def process_image(image_path, mask_path, image_color_mode='rgb', mask_color_mode='grayscale', make_mask_binary=True):
     try:
@@ -44,14 +25,16 @@ def load_and_process_files(image_dir, mask_dir, prefix='train'):
     images = []
     masks = []
     image_paths = list(image_dir.glob('*.png'))
-    
-    for image_path in tqdm(image_paths, total=len(image_paths), desc=f'Loading and processing {prefix} data'):
-        mask_path = mask_dir / f'{image_path.stem}_mask.png'
-        image, mask = process_image(image_path, mask_path)
-        if image is not None and mask is not None:
-            images.append(image)
-            masks.append(mask)
 
+    with ThreadPoolExecutor() as executor:
+        futures = {executor.submit(process_image, image_path, mask_dir / f'{image_path.stem}_mask.png'): image_path for image_path in image_paths}
+        
+        for future in tqdm(as_completed(futures), total=len(futures), desc=f'Loading and processing {prefix} data'):
+            image, mask = future.result()
+            if image is not None and mask is not None:
+                images.append(image)
+                masks.append(mask)
+                
     return images, masks
 
 def serialize_example(image, mask):
@@ -66,9 +49,11 @@ def serialize_example(image, mask):
 
 def write_tfrecord(filename, images, masks):
     with tf.io.TFRecordWriter(filename) as writer:
-        for image, mask in tqdm(zip(images, masks), total=len(images), desc='Writing TFRecord'):
-            example = serialize_example(image, mask)
-            writer.write(example)
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(serialize_example, image, mask) for image, mask in zip(images, masks)]
+            for future in tqdm(as_completed(futures), total=len(futures), desc='Writing TFRecord'):
+                example = future.result()
+                writer.write(example)
 
 def read_tfrecord(serialized_example):
     '''Read a single example from a TFRecord file and decode it'''
