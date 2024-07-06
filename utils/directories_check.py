@@ -20,4 +20,4 @@ def check_prepped_data():
     for prefix, (prepped_path, images_dir, masks_dir) in paths.items():
         if not Path(prepped_path).exists():
             logging.info(f'Prepped {prefix} data not found, creating...')
-            load_and_process_files(images_dir, masks_dir, prefix=prefix)
+            load_and_process_files(Path(images_dir), Path(masks_dir), prefix=prefix)
