@@ -1,5 +1,5 @@
 import logging
-from utils.data_loader_unet import load_and_process_files
+from utils.data_loader_unet import load_and_process_files, write_tfrecord, create_tf_dataset_from_tfrecord
 from configs import TRAIN_IMAGES_DIR, TRAIN_MASKS_DIR, TEST_IMAGES_DIR, TEST_MASKS_DIR, PREPPED_TRAIN_IMAGES, PREPPED_TEST_IMAGES
 from pathlib import Path
 
@@ -20,4 +20,6 @@ def check_prepped_data():
     for prefix, (prepped_path, images_dir, masks_dir) in paths.items():
         if not Path(prepped_path).exists():
             logging.info(f'Prepped {prefix} data not found, creating...')
-            load_and_process_files(Path(images_dir), Path(masks_dir), prefix=prefix)
+            images, masks = load_and_process_files(image_dir, mask_dir, prefix='train')
+            write_tfrecord('prepped_data/train.tfrecord', images, masks)
+            dataset = create_tf_dataset_from_tfrecord(['prepped_data/train.tfrecord'], batch_size=1)
