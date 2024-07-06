@@ -3,6 +3,7 @@ from tensorflow.keras.utils import load_img # type: ignore
 from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
 from tqdm import tqdm
 from configs import X_DIMENSION, Y_DIMENSION
+import logging
 
 def process_image(image_path, mask_path, image_color_mode='rgb', mask_color_mode='grayscale', make_mask_binary=True):
     try:
@@ -17,7 +18,7 @@ def process_image(image_path, mask_path, image_color_mode='rgb', mask_color_mode
             
         return image, mask
     except Exception as e:
-        print(f'Image or mask not found: {image_path}, {mask_path}')
+        logging.warn(f'Image or mask not found: {image_path}, {mask_path}')
         return None, None
 
 
@@ -72,8 +73,8 @@ def read_tfrecord(serialized_example):
 def create_tf_dataset_from_tfrecord(tfrecord_files, batch_size=1):
     '''Create a TFRecord dataset from a list of TFRecord files'''
     raw_dataset = tf.data.TFRecordDataset(tfrecord_files)
-    print(f'Creted dataset from {tfrecord_files} with batch size {batch_size}...')
-    print('(Normalized Images but not masks, as they are binary)')
+    logging.info(f'Creted dataset from {tfrecord_files} with batch size {batch_size}...')
+    logging.info('Normalized Images but not masks, as they are binary')
     dataset = raw_dataset.map(read_tfrecord)
     dataset = dataset.shuffle(buffer_size=1000).batch(batch_size).prefetch(buffer_size=tf.data.AUTOTUNE)
     return dataset

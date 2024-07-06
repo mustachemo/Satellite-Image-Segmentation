@@ -8,7 +8,7 @@ from model.bayesian_unet import build_bayesian_unet_model
 from utils.visualize import visualize_sample_with_mask
 from utils.logger_prep import get_logger
 from utils.custom_funcs import dice_coefficient, combined_loss, combined_loss_bayesian_unet, uncertainty_aware_loss
-from utils.directories_check import check_dirs, check_prepped_data
+from utils.checker import check_dirs, check_prepped_data
 from configs import *
 
 logger = get_logger(__name__)
@@ -77,9 +77,7 @@ if __name__ == '__main__':
         logger.info(f'Min and max values of images: {np.min(sample_image), np.max(sample_mask)}')
         logger.info(f'Min and max values of masks: {np.min(sample_mask), np.max(sample_mask)}')
         print('--'*20)
-        
 
-    # visualize_train_sample(train_images[4], train_masks[4])
 
     # Train the UNet model
     train_unet(dataset['train'], dataset['test'])

@@ -1,5 +1,4 @@
-import logging
-from utils.data_loader_unet import load_and_process_files, write_tfrecord, create_tf_dataset_from_tfrecord
+from utils.data_loader import load_and_process_files, write_tfrecord, create_tf_dataset_from_tfrecord
 from configs import TRAIN_IMAGES_DIR, TRAIN_MASKS_DIR, TEST_IMAGES_DIR, TEST_MASKS_DIR, PREPPED_TRAIN_DATASET, PREPPED_TEST_DATASET
 from pathlib import Path
 
