@@ -1,7 +1,5 @@
-import os
-import numpy as np
 import tensorflow as tf
-from tensorflow.keras.utils import load_img
+from tensorflow.keras.utils import load_img # type: ignore
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 from pathlib import Path
@@ -22,7 +20,8 @@ def visualize_sample(image, mask):
     plt.title('Mask')
     plt.axis('off')
     plt.show()
-    print('Visualizing sample...')
+    
+    plt.close()
 
 def process_image(image_path, mask_path, image_color_mode='rgb', mask_color_mode='grayscale', make_mask_binary=True):
     try:
@@ -53,7 +52,6 @@ def load_and_process_files(image_dir, mask_dir, prefix='train'):
             images.append(image)
             masks.append(mask)
 
-
     return images, masks
 
 def serialize_example(image, mask):
@@ -68,32 +66,29 @@ def serialize_example(image, mask):
 
 def write_tfrecord(filename, images, masks):
     with tf.io.TFRecordWriter(filename) as writer:
-        for image, mask in zip(images, masks):
+        for image, mask in tqdm(zip(images, masks), total=len(images), desc='Writing TFRecord'):
             example = serialize_example(image, mask)
             writer.write(example)
 
 def read_tfrecord(serialized_example):
+    '''Read a single example from a TFRecord file and decode it'''
+    
     feature_description = {
         'image': tf.io.FixedLenFeature([], tf.string),
         'mask': tf.io.FixedLenFeature([], tf.string),
     }
     example = tf.io.parse_single_example(serialized_example, feature_description)
-    image = tf.io.decode_jpeg(example['image'])
-    mask = tf.io.decode_jpeg(example['mask'])
-    image = tf.cast(image, tf.float16) / 255.0
-    mask = tf.cast(mask, tf.float16)
+    image = tf.io.decode_png(example['image'])
+    mask = tf.io.decode_png(example['mask'])
+    image = tf.cast(image, tf.float32) / 255.0
+    mask = tf.cast(mask, tf.float32)
     return image, mask
 
 def create_tf_dataset_from_tfrecord(tfrecord_files, batch_size=1):
+    '''Create a TFRecord dataset from a list of TFRecord files'''
     raw_dataset = tf.data.TFRecordDataset(tfrecord_files)
+    print(f'Creted dataset from {tfrecord_files} with batch size {batch_size}...')
+    print('(Normalized Images but not masks, as they are binary)')
     dataset = raw_dataset.map(read_tfrecord)
     dataset = dataset.shuffle(buffer_size=1000).batch(batch_size).prefetch(buffer_size=tf.data.AUTOTUNE)
     return dataset
-
-if __name__ == "__main__":
-    image_dir = Path('data_sample/images/train')
-    mask_dir = Path('data_sample/masks/train')
-
-    images, masks = load_and_process_files(image_dir, mask_dir, prefix='train')
-    write_tfrecord('prepped_data/train.tfrecord', images, masks)
-    dataset = create_tf_dataset_from_tfrecord(['prepped_data/train.tfrecord'], batch_size=1)

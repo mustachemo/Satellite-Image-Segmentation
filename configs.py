@@ -4,15 +4,13 @@ Y_DIMENSION = 256
 
 # Directory paths
 TRAIN_IMAGES_DIR = './data/images/train'
-TRAIN_MASKS_DIR = './data/mask/train'
+TRAIN_MASKS_DIR = './data/masks/train'
 TEST_IMAGES_DIR = './data/images/val'
-TEST_MASKS_DIR = './data/mask/val'
+TEST_MASKS_DIR = './data/masks/val'
 
 # Prepped directories, images and masks resized to 256x256 and made into numpy arrays and grayscale
-PREPPED_TRAIN_IMAGES = 'prepped_data/trainimages.npy'
-PREPPED_TRAIN_MASKS = 'prepped_data/trainmasks.npy'
-PREPPED_TEST_IMAGES = 'prepped_data/testimages.npy'
-PREPPED_TEST_MASKS = 'prepped_data/testmasks.npy'
+PREPPED_TRAIN_DATASET = 'prepped_data/train.tfrecord'
+PREPPED_TEST_DATASET = 'prepped_data/test.tfrecord'
 
 # Model paramaeters/hyperparameters
 DROPOUT_RATE = 0.35

@@ -82,7 +82,7 @@ def visualize_train_sample(train_images, train_masks):
 
     plt.show()
 
-def visualize_test_sample(test_image, test_mask, prediction):
+def visaulize_prediction(test_image, test_mask, prediction):
     """
     Visualize a sample image, mask and prediction.
     """
