@@ -24,7 +24,7 @@ def train_unet(train_images, train_masks, test_images, test_masks):
 
         # Callbacks
         # montior dice coefficient
-        checkpoint = ModelCheckpoint(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.h5', monitor='val_dice_coefficient', save_best_only=True, mode='max')
+        checkpoint = ModelCheckpoint(f'checkpoints/unet_model_{DROPOUT_RATE}_{ACTIVATION_FUNC}.keras', monitor='val_dice_coefficient', save_best_only=True, mode='max')
         tensorboard = TensorBoard(log_dir='logs')
         csv_logger = CSVLogger(f'logs/model_{DROPOUT_RATE}_{ACTIVATION_FUNC}_training.log')
 
@@ -49,8 +49,6 @@ def train_bayesian_unet(train_images, train_masks, test_images, test_masks):
         # Train the model
         model.fit(train_images, train_masks, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_data=(test_images, test_masks), callbacks=[checkpoint, tensorboard, csv_logger])
         logger.info('Training complete for Bayesian UNet model')
-
-
 
 
 if __name__ == '__main__':

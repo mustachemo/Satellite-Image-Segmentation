@@ -19,7 +19,10 @@ def prediction_for_single_model(test_images, test_masks, activation_fun=ACTIVATI
     # Predict and show results
     logger.info(f'Getting predictions for {test_images.shape[0]} test samples')
     predictions = model.predict(test_images)
-
+    
+    # apply sigmoid to the predictions
+    # predictions = tf.nn.sigmoid(predictions)
+    
     for i in range(50, 60):
         visualize_test_sample(test_images[i], test_masks[i], predictions[i])
 
