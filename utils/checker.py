@@ -23,12 +23,12 @@ def check_prepped_data(get_train=True, get_test=True):
         prepped_data_path, images_dir, masks_dir = paths['train']
         if Path(prepped_data_path).exists():
             print(f'{prepped_data_path} exists. Creating train dataset from it...')
-            train_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)], batch_size=1)
+            train_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
         else:
             print(f'{prepped_data_path} does not exist. Processing train images and masks...')
             images, masks = load_and_process_files(Path(images_dir), Path(masks_dir), prefix='train')
             write_tfrecord(str(prepped_data_path), images, masks)
-            train_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)], batch_size=1)
+            train_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
         
         print('--'*20)
         dataset['train'] = train_dataset
@@ -37,12 +37,12 @@ def check_prepped_data(get_train=True, get_test=True):
         prepped_data_path, images_dir, masks_dir = paths['test']
         if Path(prepped_data_path).exists():
             print(f'{prepped_data_path} exists. Creating test dataset from it...')
-            test_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)], batch_size=1)
+            test_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
         else:
             print(f'{prepped_data_path} does not exist. Processing test images and masks...')
             images, masks = load_and_process_files(Path(images_dir), Path(masks_dir), prefix='test')
             write_tfrecord(str(prepped_data_path), images, masks)
-            test_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)], batch_size=1)
+            test_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
         
         print('--'*20)
         dataset['test'] = test_dataset

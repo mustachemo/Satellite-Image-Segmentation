@@ -1,8 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras.utils import load_img # type: ignore
-from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
-from configs import X_DIMENSION, Y_DIMENSION
+from configs import X_DIMENSION, Y_DIMENSION, BATCH_SIZE, BUFFER_SIZE, MIXED_PRECISION
 import logging
 
 def process_image(image_path, mask_path, image_color_mode='rgb', mask_color_mode='grayscale', make_mask_binary=True):
@@ -15,7 +15,7 @@ def process_image(image_path, mask_path, image_color_mode='rgb', mask_color_mode
         mask = tf.expand_dims(mask, axis=-1)
         if make_mask_binary:
             mask = tf.cast(mask > 0, tf.uint8)
-            
+
         return image, mask
     except Exception as e:
         logging.warn(f'Image or mask not found: {image_path}, {mask_path}')
@@ -66,15 +66,16 @@ def read_tfrecord(serialized_example):
     example = tf.io.parse_single_example(serialized_example, feature_description)
     image = tf.io.decode_png(example['image'])
     mask = tf.io.decode_png(example['mask'])
-    image = tf.cast(image, tf.float32) / 255.0
-    mask = tf.cast(mask, tf.float32)
+    dtype = tf.float16 if MIXED_PRECISION else tf.float32
+    image = tf.cast(image, dtype) / 255.0
+    mask = tf.cast(mask, dtype)
     return image, mask
 
-def create_tf_dataset_from_tfrecord(tfrecord_files, batch_size=1):
+def create_tf_dataset_from_tfrecord(tfrecord_files):
     '''Create a TFRecord dataset from a list of TFRecord files'''
     raw_dataset = tf.data.TFRecordDataset(tfrecord_files)
-    logging.info(f'Creted dataset from {tfrecord_files} with batch size {batch_size}...')
+    logging.info(f'Creted dataset from {tfrecord_files} with batch size {BATCH_SIZE}...')
     logging.info('Normalized Images but not masks, as they are binary')
-    dataset = raw_dataset.map(read_tfrecord)
-    dataset = dataset.shuffle(buffer_size=1000).batch(batch_size).prefetch(buffer_size=tf.data.AUTOTUNE)
+    dataset = raw_dataset.map(read_tfrecord, num_parallel_calls=tf.data.AUTOTUNE)
+    dataset = dataset.shuffle(buffer_size=BUFFER_SIZE).batch(BATCH_SIZE).repeat().prefetch(buffer_size=tf.data.AUTOTUNE)
     return dataset
