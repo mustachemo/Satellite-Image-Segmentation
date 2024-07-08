@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+@tf.function
 def dice_coefficient(y_true, y_pred, smooth=1e-6):
     '''Dice coefficient for binary segmentation'''
     y_true_f = tf.reshape(y_true, [-1])
@@ -9,15 +10,18 @@ def dice_coefficient(y_true, y_pred, smooth=1e-6):
     union = tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f)
     return (2. * intersection + smooth) / (union + smooth)
 
+@tf.function
 def dice_loss(y_true, y_pred):
     return 1 - dice_coefficient(y_true, y_pred)
 
+@tf.function
 def combined_loss(y_true, y_pred):
     '''Combined loss function that combines Dice loss with binary cross-entropy'''
     dice = dice_loss(y_true, y_pred)
     bce = tf.keras.losses.binary_crossentropy(y_true, y_pred)
     return dice + bce
 
+@tf.function
 def uncertainty_aware_loss(y_true, y_pred, lambda_=0.01):
     '''Uncertainty-aware loss function that combines Dice loss with uncertaint
     y'''
@@ -33,6 +37,7 @@ def uncertainty_aware_loss(y_true, y_pred, lambda_=0.01):
 
 
 #################### Bayesian U-Net Loss Functions ####################
+@tf.function
 def bayesian_unet_nll(y_true, y_pred):
     '''
     Negative log-likelihood for Bayesian U-Net.
@@ -41,6 +46,7 @@ def bayesian_unet_nll(y_true, y_pred):
     '''
     return -tf.reduce_mean(y_pred.log_prob(y_true))
 
+@tf.function
 def combined_loss_bayesian_unet(y_true, y_pred):
     """Combine the Dice loss with negative log-likelihood for probabilistic layers."""
     # print("y_pred distribution mean shape:", y_pred.mean().shape)

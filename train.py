@@ -60,6 +60,11 @@ def train_bayesian_unet(train_dataset, test_dataset):
 
 
 if __name__ == '__main__':
+    # make sure the tensorflow version is 2.16.1
+    if tf.__version__ != '2.16.2':
+        logger.warning(f'You are using TensorFlow version {tf.__version__}, this code is tested with TensorFlow version 2.16.2')
+        logger.warning('The code may not work with other versions of TensorFlow')
+    
     
     check_dirs()
     dataset = dict()
