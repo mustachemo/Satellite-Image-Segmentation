@@ -1,6 +1,7 @@
 ## Uncertainty Quantification in Satellite Image Segmentation
 This repository contains experiments and implementations for uncertainty quantification in deep neural networks applied to image segmenetation tasks using a UNet CNN architecture. The goal is to leverage dropout layers and other uncertainity quantifications to measure prediction uncertainty. **There is a report in report/text/report.pdf that summerizew this project!**
 
+- [Uncertainty Quantification in Satellite Image Segmentation](#uncertainty-quantification-in-satellite-image-segmentation)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Primary Files:](#primary-files)
@@ -8,6 +9,7 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Running the experiments:](#running-the-experiments)
 - [Satellite Dataset](#satellite-dataset)
 - [Information](#information)
+  - [Improvements](#improvements)
 - [Acknowledgements](#acknowledgements)
   - [Dataset:](#dataset)
   - [MC Dropout](#mc-dropout)
@@ -79,6 +81,14 @@ The satellite dataset is primarly for object detection and segmentation using bo
 ## Information
 
 - `model/bayesian_unet.py`: This attempt was to implement a Bayesian U-Net model using MC Dropout. I couldn't get the model to train because of memory constraints.
+
+### Improvements
+
+- [] Add function to augment data
+- [] Optimize TensorFlow performance using the Profiler (https://www.tensorflow.org/guide/profiler#overview_page)
+- [] Optimize TensorFlow GPU performance with the TensorFlow Profiler (https://www.tensorflow.org/guide/profiler)
+- [] TensorFlow graph optimization with Grappler (https://www.tensorflow.org/guide/graph_optimization)
+- [] Mixed precision (https://www.tensorflow.org/guide/mixed_precision)
 
 ## Acknowledgements
 

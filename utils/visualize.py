@@ -46,43 +46,21 @@ def draw_bboxes_on_image(image, bboxes):
 
     return image
 
-def visualize(image_index):
-    """
-    Visualize image, mask and bounding boxes.
-    """
-    image, mask = load_image_and_mask(image_index)
-    bboxes = load_bboxes()
-    image_bboxes = bboxes.get(image_index, [])
-
-    fig, ax = plt.subplots(1, 2, figsize=(15, 7))
-
-    ax[0].imshow(image)
-    ax[0].set_title('Image')
-
-    ax[1].imshow(mask)
-    ax[1].set_title('Mask')
-
-    # # Draw bounding boxes on the image
-    # image = draw_bboxes_on_image(image, image_bboxes)
-
-    # ax[0].imshow(image)
-
+def visualize_sample_with_mask(image, mask):
+    plt.figure(figsize=(10, 10))
+    plt.subplot(1, 2, 1)
+    plt.imshow(image)
+    plt.title('Image')
+    plt.axis('off')
+    
+    plt.subplot(1, 2, 2)
+    plt.imshow(mask, cmap='gray')
+    plt.title('Mask')
+    plt.axis('off')
     plt.show()
+    plt.close()
 
-def visualize_train_sample(train_images, train_masks):
-    """
-    Visualize a sample image, mask and bounding boxes.
-    """
-    fig, ax = plt.subplots(1, 2, figsize=(15, 7))
-
-    ax[0].imshow(train_images)
-    ax[0].set_title('Image')
-    ax[1].imshow(train_masks, cmap='gray')
-    ax[1].set_title('Mask')
-
-    plt.show()
-
-def visualize_test_sample(test_image, test_mask, prediction):
+def visaulize_prediction(test_image, test_mask, prediction):
     """
     Visualize a sample image, mask and prediction.
     """
