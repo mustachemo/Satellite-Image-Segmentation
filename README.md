@@ -7,6 +7,8 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Primary Files:](#primary-files)
   - [Directory Structure:](#directory-structure)
   - [Running the experiments:](#running-the-experiments)
+    - [Without docker](#without-docker)
+    - [With docker](#with-docker)
 - [Satellite Dataset](#satellite-dataset)
 - [Information](#information)
   - [Improvements](#improvements)
@@ -52,6 +54,8 @@ pip install -r requirements.txt
 
 ### Running the experiments:
 
+#### Without docker
+
 1. Download the dataset from [here](https://github.com/Yurushia1998/SatelliteDataset)
 2. Place the dataset (all files you download from the drive folder) in the `data/` directory.
 3. Run `train.py` to train the model (The prepped data used for the training will be automatically generated and saved in the `prepped_data/` directory when running the training script).
@@ -64,6 +68,28 @@ python train.py
 python predict.py
 python main.py
 ```
+
+#### With docker
+
+1. Build the docker image:
+
+```bash
+sudo docker build -t satellite-unet .
+```
+
+2.1 Run the docker container:
+
+```bash
+sudo docker run --rm --shm-size=8g --ulimit memlock=-1 --gpus all -it -v $(pwd)/prepped_data:/data satellite-unet
+```
+
+- remove `--gpus all` if you don't have a GPU.
+
+2.2 Run the docker container with docker-compose:
+  
+  ```bash
+  sudo docker-compose up
+  ```
 
 ## Satellite Dataset
 

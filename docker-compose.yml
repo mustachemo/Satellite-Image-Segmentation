@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  unet:
+    image: sat-segmentation
+    shm_size: 8g
+    ulimits:
+      memlock: -1
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [gpu]
+    volumes:
+      - ./prepped_data:/workspace/prepped_data
+    stdin_open: true
+    tty: true
+    command: bash

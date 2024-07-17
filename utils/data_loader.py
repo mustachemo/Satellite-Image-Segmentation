@@ -77,5 +77,5 @@ def create_tf_dataset_from_tfrecord(tfrecord_files):
     logging.info(f'Creted dataset from {tfrecord_files} with batch size {BATCH_SIZE}...')
     logging.info('Normalized Images but not masks, as they are binary')
     dataset = raw_dataset.map(read_tfrecord, num_parallel_calls=tf.data.AUTOTUNE)
-    dataset = dataset.shuffle(buffer_size=BUFFER_SIZE).batch(BATCH_SIZE).repeat().prefetch(buffer_size=tf.data.AUTOTUNE)
+    dataset = dataset.shuffle(buffer_size=BUFFER_SIZE).batch(BATCH_SIZE).prefetch(buffer_size=tf.data.AUTOTUNE)
     return dataset

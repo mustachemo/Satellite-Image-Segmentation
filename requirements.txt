@@ -1,6 +1,5 @@
-tensorflow==2.16.2
+# tensorflow==2.16.1
 tensorflow-probability==0.24.0
-tf_keras=2.16.0
 numpy==1.26.4
 matplotlib==3.9.1
 tqdm==4.66.4
