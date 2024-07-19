@@ -6,42 +6,48 @@ from configs import X_DIMENSION, Y_DIMENSION
 Conv2DFlipout = tfp.layers.Convolution2DFlipout
 tfd = tfp.distributions
 
+
 def make_probabilistic_output_layer():
     return tfp.layers.DistributionLambda(
         make_distribution_fn=lambda t: tfp.distributions.Normal(loc=t, scale=1),
-        convert_to_tensor_fn=lambda s: s.mean()
+        convert_to_tensor_fn=lambda s: s.mean(),
     )
+
 
 def downsample_block(input_tensor, num_filters, dropout_rate=0.1):
     """Block for downsampling: Convolution -> Batch Normalization -> ReLU -> Convolution -> Batch Normalization -> ReLU -> Max Pooling"""
-    x = Conv2DFlipout(num_filters, (3, 3), padding='same')(input_tensor)
+    x = Conv2DFlipout(num_filters, (3, 3), padding="same")(input_tensor)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = Conv2DFlipout(num_filters, (3, 3), padding='same')(x)
+    x = layers.Activation("relu")(x)
+    x = Conv2DFlipout(num_filters, (3, 3), padding="same")(x)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
+    x = layers.Activation("relu")(x)
     if dropout_rate > 0:
         x = layers.SpatialDropout2D(dropout_rate)(x)
     return x, layers.MaxPooling2D(pool_size=(2, 2))(x)
 
+
 def double_conv_block(input_tensor, num_filters):
-    x = Conv2DFlipout(num_filters, (3, 3), padding='same')(input_tensor)
+    x = Conv2DFlipout(num_filters, (3, 3), padding="same")(input_tensor)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = Conv2DFlipout(num_filters, (3, 3), padding='same')(x)
+    x = layers.Activation("relu")(x)
+    x = Conv2DFlipout(num_filters, (3, 3), padding="same")(x)
     x = layers.BatchNormalization()(x)
-    return layers.Activation('relu')(x)
+    return layers.Activation("relu")(x)
+
 
 def upsample_block(input_tensor, skip_tensor, num_filters, dropout_rate=0.1):
     """Block for upsampling: Transpose Convolution -> Concatenation with skip connection -> Convolution -> Batch Normalization -> ReLU -> Convolution -> Batch Normalization -> ReLU"""
-    x = layers.Conv2DTranspose(num_filters, (2, 2), strides=(2, 2), padding='same')(input_tensor)
+    x = layers.Conv2DTranspose(num_filters, (2, 2), strides=(2, 2), padding="same")(
+        input_tensor
+    )
     x = layers.concatenate([x, skip_tensor])
-    x = Conv2DFlipout(num_filters, (3, 3), padding='same')(x)
+    x = Conv2DFlipout(num_filters, (3, 3), padding="same")(x)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
-    x = Conv2DFlipout(num_filters, (3, 3), padding='same')(x)
+    x = layers.Activation("relu")(x)
+    x = Conv2DFlipout(num_filters, (3, 3), padding="same")(x)
     x = layers.BatchNormalization()(x)
-    x = layers.Activation('relu')(x)
+    x = layers.Activation("relu")(x)
     if dropout_rate > 0:
         x = layers.SpatialDropout2D(dropout_rate)(x)
     return x
@@ -59,8 +65,10 @@ def build_bayesian_unet_model(dropout_rate=0.1):
 
     # Bottleneck
     bottleneck = double_conv_block(p4, 1024)
-    bottleneck = layers.SpatialDropout2D(dropout_rate)(bottleneck)  # Additional dropout at the bottleneck
-    
+    bottleneck = layers.SpatialDropout2D(dropout_rate)(
+        bottleneck
+    )  # Additional dropout at the bottleneck
+
     # Decoding path
     u6 = upsample_block(bottleneck, f4, 512, dropout_rate)
     u7 = upsample_block(u6, f3, 256, dropout_rate)

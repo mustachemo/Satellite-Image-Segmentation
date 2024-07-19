@@ -16,6 +16,7 @@ This repository contains experiments and implementations for uncertainty quantif
   - [Dataset:](#dataset)
   - [MC Dropout](#mc-dropout)
   - [Further UQ in Deep Learning](#further-uq-in-deep-learning)
+  - [Packages](#packages)
 
 ## Installation
 
@@ -80,7 +81,7 @@ sudo docker build -t satellite-unet .
 2.1 Run the docker container:
 
 ```bash
-sudo docker run --rm --shm-size=8g --ulimit memlock=-1 --gpus all -it -v $(pwd)/prepped_data:/data satellite-unet
+sudo docker run --rm --shm-size=8g --ulimit memlock=-1 --gpus all -it -v $(pwd)/prepped_data:/workspace satellite-unet
 ```
 
 - remove `--gpus all` if you don't have a GPU.
@@ -130,3 +131,7 @@ The satellite dataset is primarly for object detection and segmentation using bo
 ### Further UQ in Deep Learning
 
 - [A review of uncertainty quantification in deep learning: Techniques, applications and challenges](https://www.sciencedirect.com/science/article/pii/S1566253521001081).
+
+### Packages
+
+- [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

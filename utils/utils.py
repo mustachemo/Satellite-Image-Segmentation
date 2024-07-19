@@ -1,5 +1,6 @@
 from configs import BATCH_SIZE, MIXED_PRECISION
 
+
 def calculate_memory_usage(image, mask):
     bytes = 2 if MIXED_PRECISION else 4
     image_size = image.shape[0] * image.shape[1] * image.shape[2] * bytes
