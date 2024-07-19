@@ -6,7 +6,7 @@ from utils.custom_funcs import dice_loss, dice_coefficient, combined_loss
 from utils.logger_prep import get_logger
 from utils.visualize import visualize
 
-from uncertainty_quantification.MC_dropout import (
+from utils.MC_dropout import (
     mc_dropout_predictions,
     visualize_mean_std,
     visualize_confidence_intervals,

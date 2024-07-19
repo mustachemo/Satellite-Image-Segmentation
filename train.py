@@ -103,8 +103,7 @@ if __name__ == "__main__":
     # make sure the tensorflow version is 2.16.1
     if tf.__version__ != "2.16.2":
         logger.warning(
-            f"You are using TensorFlow version { \
-                tf.__version__}, this code is tested with TensorFlow version 2.16.2"
+            f"You are using TensorFlow version {tf.__version__}, this code is tested with TensorFlow version 2.16.2"
         )
         logger.warning("The code may not work with other versions of TensorFlow")
 
@@ -137,16 +136,13 @@ if __name__ == "__main__":
 
         visualize_sample_with_mask(sample_image, sample_mask)
         logger.info(
-            f"Min and max values of image: {
-                np.min(sample_image), np.max(sample_mask)}"
+            f"Min and max values of image: {np.min(sample_image), np.max(sample_mask)}"
         )
         logger.info(
-            f"Min and max values of mask: {
-                np.min(sample_mask), np.max(sample_mask)}"
+            f"Min and max values of mask: {np.min(sample_mask), np.max(sample_mask)}"
         )
         print(
-            f"Memory usage per batch: {
-                calculate_memory_usage(sample_image, sample_mask)} MB"
+            f"Memory usage per batch: {calculate_memory_usage(sample_image, sample_mask)} MB"
         )
         print("--" * 20)
 
