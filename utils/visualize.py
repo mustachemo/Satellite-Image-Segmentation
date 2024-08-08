@@ -95,9 +95,7 @@ def visualize_training_logs():
     for log_file in log_files:
 
         lambda_value = log_file.split("_")[-1].split(".log")[0]
-
         df = pd.read_csv(log_file)
-
         data[lambda_value] = df["val_dice_coefficient"]
 
     plt.figure(figsize=(10, 6))

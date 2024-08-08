@@ -36,8 +36,7 @@ def prediction_for_single_model(test_dataset, activation_fun=ACTIVATION_FUNC):
     # Evaluate the model
     logger.info("Evaluating model")
     loss, accuracy, dice_coefficient_metric = model.evaluate(test_dataset)
-    logger.info(
-        f"Loss: {round(loss, 3)}, Accuracy: {round(accuracy, 3)}, Dice Coefficient: {round(dice_coefficient_metric, 3)}"
+    logger.info(f"Loss: {round(loss, 3)}, Accuracy: {round(accuracy, 3)}, Dice Coefficient: {round(dice_coefficient_metric, 3)}"
     )
 
     logger.info("Predictions complete")

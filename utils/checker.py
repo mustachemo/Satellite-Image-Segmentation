@@ -3,14 +3,7 @@ from utils.data_loader import (
     write_tfrecord,
     create_tf_dataset_from_tfrecord,
 )
-from configs import (
-    TRAIN_IMAGES_DIR,
-    TRAIN_MASKS_DIR,
-    TEST_IMAGES_DIR,
-    TEST_MASKS_DIR,
-    PREPPED_TRAIN_DATASET,
-    PREPPED_TEST_DATASET,
-)
+from configs import *
 from pathlib import Path
 
 
@@ -24,10 +17,8 @@ def check_dirs():
 def check_prepped_data(get_train=True, get_test=True):
     """Check if prepped data exists, if not create it"""
     print("--" * 20)
-    paths = {
-        "train": (PREPPED_TRAIN_DATASET, TRAIN_IMAGES_DIR, TRAIN_MASKS_DIR),
-        "test": (PREPPED_TEST_DATASET, TEST_IMAGES_DIR, TEST_MASKS_DIR),
-    }
+    paths = {"train": (PREPPED_TRAIN_DATASET, TRAIN_IMAGES_DIR, TRAIN_MASKS_DIR),
+             "test": (PREPPED_TEST_DATASET, TEST_IMAGES_DIR, TEST_MASKS_DIR),}
 
     dataset = dict()
 
@@ -37,12 +28,8 @@ def check_prepped_data(get_train=True, get_test=True):
             print(f"{prepped_data_path} exists. Creating train dataset from it...")
             train_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
         else:
-            print(
-                f"{prepped_data_path} does not exist. Processing train images and masks..."
-            )
-            images, masks = load_and_process_files(
-                Path(images_dir), Path(masks_dir), prefix="train"
-            )
+            print(f"{prepped_data_path} does not exist. Processing train images and masks...")
+            images, masks = load_and_process_files(Path(images_dir), Path(masks_dir), prefix="train")
             write_tfrecord(str(prepped_data_path), images, masks)
             train_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
 
@@ -55,12 +42,8 @@ def check_prepped_data(get_train=True, get_test=True):
             print(f"{prepped_data_path} exists. Creating test dataset from it...")
             test_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
         else:
-            print(
-                f"{prepped_data_path} does not exist. Processing test images and masks..."
-            )
-            images, masks = load_and_process_files(
-                Path(images_dir), Path(masks_dir), prefix="test"
-            )
+            print(f"{prepped_data_path} does not exist. Processing test images and masks...")
+            images, masks = load_and_process_files(Path(images_dir), Path(masks_dir), prefix="test")
             write_tfrecord(str(prepped_data_path), images, masks)
             test_dataset = create_tf_dataset_from_tfrecord([str(prepped_data_path)])
 

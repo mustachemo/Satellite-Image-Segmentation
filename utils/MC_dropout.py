@@ -2,7 +2,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from utils.logger_prep import get_logger
-from configs import X_DIMENSION, Y_DIMENSION
+from ..configs import X_DIMENSION, Y_DIMENSION
 from utils.custom_funcs import dice_coefficient
 
 logger = get_logger(__name__)
