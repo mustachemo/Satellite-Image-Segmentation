@@ -13,15 +13,38 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 
-import wandb
 from evaluate import evaluate
 from model import UNet
-from utils.data_loading import BasicDataset, CarvanaDataset
+from utils.data_loading import BasicDataset
 from utils.dice_score import dice_loss
 
-dir_img = Path('./data/imgs/')
-dir_mask = Path('./data/masks/')
+dir_img = Path('./data/images/train/')
+dir_mask = Path('./data/masks/train/')
 dir_checkpoint = Path('./checkpoints/')
+
+import cv2
+def log_data_info(dir_img, dir_mask, mask_suffix=''):
+    img_files = list(dir_img.glob('*.png'))
+    mask_files = list(dir_mask.glob(f'*{mask_suffix}.png'))
+
+    print(f"Number of images: {len(img_files)}")
+    print(f"Number of masks: {len(mask_files)}")
+
+    for img_file, mask_file in zip(img_files, mask_files):
+        img = cv2.imread(str(img_file))
+        mask = cv2.imread(str(mask_file))
+
+        print(f"Image: {img_file.name}")
+        print(f"Color mode: {img.shape[2]} channels")
+        print(f"Dimensions: {img.shape[1]} x {img.shape[0]}")
+
+        print(f"Mask: {mask_file.name}")
+        print(f"Color mode: {mask.shape[2]} channels")
+        print(f"Dimensions: {mask.shape[1]} x {mask.shape[0]}")
+
+        print("--------------------")
+
+log_data_info(dir_img, dir_mask, mask_suffix='_mask')
 
 
 def train_model(
@@ -39,10 +62,7 @@ def train_model(
         gradient_clipping: float = 1.0,
 ):
     # 1. Create dataset
-    try:
-        dataset = CarvanaDataset(dir_img, dir_mask, img_scale)
-    except (AssertionError, RuntimeError, IndexError):
-        dataset = BasicDataset(dir_img, dir_mask, img_scale)
+    dataset = BasicDataset(dir_img, dir_mask, img_scale, mask_suffix='_mask')
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -53,13 +73,6 @@ def train_model(
     loader_args = dict(batch_size=batch_size, num_workers=os.cpu_count(), pin_memory=True)
     train_loader = DataLoader(train_set, shuffle=True, **loader_args)
     val_loader = DataLoader(val_set, shuffle=False, drop_last=True, **loader_args)
-
-    # (Initialize logging)
-    experiment = wandb.init(project='U-Net', resume='allow', anonymous='must')
-    experiment.config.update(
-        dict(epochs=epochs, batch_size=batch_size, learning_rate=learning_rate,
-             val_percent=val_percent, save_checkpoint=save_checkpoint, img_scale=img_scale, amp=amp)
-    )
 
     logging.info(f'''Starting training:
         Epochs:          {epochs}
@@ -120,11 +133,6 @@ def train_model(
                 pbar.update(images.shape[0])
                 global_step += 1
                 epoch_loss += loss.item()
-                experiment.log({
-                    'train loss': loss.item(),
-                    'step': global_step,
-                    'epoch': epoch
-                })
                 pbar.set_postfix(**{'loss (batch)': loss.item()})
 
                 # Evaluation round
@@ -134,30 +142,13 @@ def train_model(
                         histograms = {}
                         for tag, value in model.named_parameters():
                             tag = tag.replace('/', '.')
-                            if not (torch.isinf(value) | torch.isnan(value)).any():
-                                histograms['Weights/' + tag] = wandb.Histogram(value.data.cpu())
-                            if not (torch.isinf(value.grad) | torch.isnan(value.grad)).any():
-                                histograms['Gradients/' + tag] = wandb.Histogram(value.grad.data.cpu())
+
 
                         val_score = evaluate(model, val_loader, device, amp)
                         scheduler.step(val_score)
 
                         logging.info('Validation Dice score: {}'.format(val_score))
-                        try:
-                            experiment.log({
-                                'learning rate': optimizer.param_groups[0]['lr'],
-                                'validation Dice': val_score,
-                                'images': wandb.Image(images[0].cpu()),
-                                'masks': {
-                                    'true': wandb.Image(true_masks[0].float().cpu()),
-                                    'pred': wandb.Image(masks_pred.argmax(dim=1)[0].float().cpu()),
-                                },
-                                'step': global_step,
-                                'epoch': epoch,
-                                **histograms
-                            })
-                        except:
-                            pass
+
 
         if save_checkpoint:
             Path(dir_checkpoint).mkdir(parents=True, exist_ok=True)
@@ -174,12 +165,12 @@ def get_args():
     parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-5,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
-    parser.add_argument('--scale', '-s', type=float, default=0.5, help='Downscaling factor of the images')
+    parser.add_argument('--scale', '-s', type=float, default=1.0, help='Downscaling factor of the images')
     parser.add_argument('--validation', '-v', dest='val', type=float, default=10.0,
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=False, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
+    parser.add_argument('--classes', '-c', type=int, default=1, help='Number of classes')
 
     return parser.parse_args()
 
@@ -191,10 +182,12 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     logging.info(f'Using device {device}')
 
+    log_data_info(dir_img, dir_mask, mask_suffix='_mask')
+
     # Change here to adapt to your data
     # n_channels=3 for RGB images
     # n_classes is the number of probabilities you want to get per pixel
-    model = UNet(n_channels=3, n_classes=args.classes, bilinear=args.bilinear)
+    model = UNet(n_channels=1, n_classes=args.classes, bilinear=args.bilinear)
     model = model.to(memory_format=torch.channels_last)
 
     logging.info(f'Network:\n'
