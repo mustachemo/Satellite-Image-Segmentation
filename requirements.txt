@@ -1,7 +1,2 @@
-tensorflow==2.16.1
-tensorflow-probability==0.24.0
-numpy==1.26.4
-matplotlib==3.9.1
-tqdm==4.66.4
-pillow==10.4.0
-pandas==2.2.2
+torch==2.4.0+cu124
+matplotlib==3.9.2
