@@ -12,6 +12,8 @@ from pathlib import Path
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
+import cv2
+
 
 def load_image(filename):
     ext = splitext(filename)[1]
@@ -20,7 +22,8 @@ def load_image(filename):
     elif ext in ['.pt', '.pth']:
         return Image.fromarray(torch.load(filename).numpy())
     else:
-        return Image.open(filename)
+        # return cv2.imread(str(filename), cv2.IMREAD_UNCHANGED)
+        return cv2.imread(str(filename), cv2.IMREAD_GRAYSCALE)
 
 
 def unique_mask_values(idx, mask_dir, mask_suffix):
@@ -70,7 +73,7 @@ class BasicDataset(Dataset):
         img = np.asarray(pil_img)
 
         if is_mask:
-            mask = np.zeros((newH, newW), dtype=np.int64)
+            mask = np.zeros((newH, newW), dtype=np.uint8)
             for i, v in enumerate(mask_values):
                 if img.ndim == 2:
                     mask[img == v] = i

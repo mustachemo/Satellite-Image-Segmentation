@@ -12,6 +12,7 @@ from pathlib import Path
 from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
+import cv2
 
 from evaluate import evaluate
 from model import UNet
@@ -22,29 +23,22 @@ dir_img = Path('./data/images/train/')
 dir_mask = Path('./data/masks/train/')
 dir_checkpoint = Path('./checkpoints/')
 
-import cv2
+
 def log_data_info(dir_img, dir_mask, mask_suffix=''):
     img_files = list(dir_img.glob('*.png'))
     mask_files = list(dir_mask.glob(f'*{mask_suffix}.png'))
-
     print(f"Number of images: {len(img_files)}")
     print(f"Number of masks: {len(mask_files)}")
+    
 
-    for img_file, mask_file in zip(img_files, mask_files):
-        img = cv2.imread(str(img_file))
-        mask = cv2.imread(str(mask_file))
+    img = cv2.imread(str(img_files[0]))
+    mask = cv2.imread(str(mask_files[0]))
+    print(f"Color mode: {img.shape[2]} channels")
+    print(f"Dimensions: {img.shape[1]} x {img.shape[0]}")
+    print(f"Color mode: {mask.shape[2]} channels")
+    print(f"Dimensions: {mask.shape[1]} x {mask.shape[0]}")
+    print("--------------------")
 
-        print(f"Image: {img_file.name}")
-        print(f"Color mode: {img.shape[2]} channels")
-        print(f"Dimensions: {img.shape[1]} x {img.shape[0]}")
-
-        print(f"Mask: {mask_file.name}")
-        print(f"Color mode: {mask.shape[2]} channels")
-        print(f"Dimensions: {mask.shape[1]} x {mask.shape[0]}")
-
-        print("--------------------")
-
-log_data_info(dir_img, dir_mask, mask_suffix='_mask')
 
 
 def train_model(
