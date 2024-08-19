@@ -14,6 +14,7 @@ from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 import cv2
 import numpy as np
+from pathlib import Path
 
 from evaluate import evaluate
 from model import UNet
@@ -23,23 +24,21 @@ from utils.dice_score import dice_loss
 dir_img = Path('./data/images/train/')
 dir_mask = Path('./data/masks/train/')
 dir_checkpoint = Path('./checkpoints/')
+if not dir_checkpoint.exists():
+    dir_checkpoint.mkdir(parents=True, exist_ok=True)
+
 
 
 def log_data_info(dir_img, dir_mask, mask_suffix=''):
     img_files = list(dir_img.glob('*.png'))
     mask_files = list(dir_mask.glob(f'*{mask_suffix}.png'))
-    print(f"Number of images: {len(img_files)}")
-    print(f"Number of masks: {len(mask_files)}")
+    print(f"Number of images/Number of masks: {len(img_files)}/{len(mask_files)}")
     
-
     img = cv2.imread(str(img_files[0]), cv2.IMREAD_GRAYSCALE)
     mask = cv2.imread(str(mask_files[0]), cv2.IMREAD_GRAYSCALE)
-    #check if there are 3 dimensions
-    print(f"Dimensions: {img.shape[1]} x {img.shape[0]}")
-    print(f"Dimensions: {mask.shape[1]} x {mask.shape[0]}")
-    print(f'Min/Max of Image: {img.min()}/{img.max()}')
-    print(f'Min/Max of Mask: {mask.min()}/{mask.max()}')
-    print(f'Unique values in Mask: {np.unique(mask)}')
+    print(f"Images dim/Masks dim: ({img.shape[1]} x {img.shape[0]})/({mask.shape[1]} x {mask.shape[0]})")
+    print(f'Min-Max of Image/Mask: {img.min()}-{img.max()}/{mask.min()}-{mask.max()}')
+    print(f'Unique values in Mask: {np.unique(mask)} (Count: {len(np.unique(mask))})')
     print("--------------------")
 
 
@@ -59,7 +58,7 @@ def train_model(
         gradient_clipping: float = 1.0,
 ):
     # 1. Create dataset
-    dataset = BasicDataset(dir_img, dir_mask, img_scale, mask_suffix='_mask', grayscale=True if model.n_channels == 1 else False)
+    dataset = BasicDataset(dir_img, dir_mask, img_scale, mask_suffix='_mask')
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -159,7 +158,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
     parser.add_argument('--epochs', '-e', metavar='E', type=int, default=5, help='Number of epochs')
     parser.add_argument('--batch-size', '-b', dest='batch_size', metavar='B', type=int, default=1, help='Batch size')
-    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=1e-5,
+    parser.add_argument('--learning-rate', '-l', metavar='LR', type=float, default=3e-4,
                         help='Learning rate', dest='lr')
     parser.add_argument('--load', '-f', type=str, default=False, help='Load model from a .pth file')
     parser.add_argument('--scale', '-s', type=float, default=1.0, help='Downscaling factor of the images')
@@ -167,7 +166,7 @@ def get_args():
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=False, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=3, help='Number of classes')
+    parser.add_argument('--classes', '-c', type=int, default=4, help='Number of classes')
 
     return parser.parse_args()
 
@@ -184,7 +183,7 @@ if __name__ == '__main__':
     # Change here to adapt to your data
     # n_channels=3 for RGB images
     # n_classes is the number of probabilities you want to get per pixel
-    model = UNet(n_channels=1, n_classes=args.classes, bilinear=args.bilinear)
+    model = UNet(n_channels=3, n_classes=args.classes, bilinear=args.bilinear)
     model = model.to(memory_format=torch.channels_last)
 
     logging.info(f'Network:\n'

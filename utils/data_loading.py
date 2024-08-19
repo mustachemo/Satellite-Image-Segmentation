@@ -10,23 +10,17 @@ from os.path import splitext, isfile, join
 from pathlib import Path
 from torch.utils.data import Dataset
 from tqdm import tqdm
-
 import cv2
 
 
 
-
-
-
-
 class BasicDataset(Dataset):
-    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = '', grayscale: bool = False):
+    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = ''):
         self.images_dir = Path(images_dir)
         self.mask_dir = Path(mask_dir)
         assert 0 < scale <= 1, 'Scale must be between 0 and 1'
         self.scale = scale
         self.mask_suffix = mask_suffix
-        self.grayscale = grayscale
 
         self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
         if not self.ids:
@@ -103,7 +97,7 @@ class BasicDataset(Dataset):
         elif ext in ['.pt', '.pth']:
             np_img = torch.load(filename).numpy()
         else:
-            np_img = cv2.imread(str(filename), cv2.IMREAD_GRAYSCALE if self.grayscale else cv2.IMREAD_UNCHANGED)
+            np_img = cv2.imread(str(filename))
         
         return np_img
     
