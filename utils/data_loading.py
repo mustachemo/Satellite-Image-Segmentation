@@ -1,7 +1,6 @@
 import logging
 import numpy as np
 import torch
-from PIL import Image
 from functools import lru_cache
 from functools import partial
 from itertools import repeat
@@ -15,36 +14,19 @@ from tqdm import tqdm
 import cv2
 
 
-def load_image(filename):
-    ext = splitext(filename)[1]
-    if ext == '.npy':
-        return Image.fromarray(np.load(filename))
-    elif ext in ['.pt', '.pth']:
-        return Image.fromarray(torch.load(filename).numpy())
-    else:
-        # return cv2.imread(str(filename), cv2.IMREAD_UNCHANGED)
-        return cv2.imread(str(filename), cv2.IMREAD_GRAYSCALE)
 
 
-def unique_mask_values(idx, mask_dir, mask_suffix):
-    mask_file = list(mask_dir.glob(idx + mask_suffix + '.*'))[0]
-    mask = np.asarray(load_image(mask_file))
-    if mask.ndim == 2:
-        return np.unique(mask)
-    elif mask.ndim == 3:
-        mask = mask.reshape(-1, mask.shape[-1])
-        return np.unique(mask, axis=0)
-    else:
-        raise ValueError(f'Loaded masks should have 2 or 3 dimensions, found {mask.ndim}')
+
 
 
 class BasicDataset(Dataset):
-    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = ''):
+    def __init__(self, images_dir: str, mask_dir: str, scale: float = 1.0, mask_suffix: str = '', grayscale: bool = False):
         self.images_dir = Path(images_dir)
         self.mask_dir = Path(mask_dir)
         assert 0 < scale <= 1, 'Scale must be between 0 and 1'
         self.scale = scale
         self.mask_suffix = mask_suffix
+        self.grayscale = grayscale
 
         self.ids = [splitext(file)[0] for file in listdir(images_dir) if isfile(join(images_dir, file)) and not file.startswith('.')]
         if not self.ids:
@@ -54,7 +36,7 @@ class BasicDataset(Dataset):
         logging.info('Scanning mask files to determine unique values')
         with Pool() as p:
             unique = list(tqdm(
-                p.imap(partial(unique_mask_values, mask_dir=self.mask_dir, mask_suffix=self.mask_suffix), self.ids),
+                p.imap(partial(self.unique_mask_values, mask_dir=self.mask_dir, mask_suffix=self.mask_suffix), self.ids),
                 total=len(self.ids)
             ))
 
@@ -65,12 +47,12 @@ class BasicDataset(Dataset):
         return len(self.ids)
 
     @staticmethod
-    def preprocess(mask_values, pil_img, scale, is_mask):
-        w, h = pil_img.size
+    def preprocess(mask_values, cv2_img, scale, is_mask):
+        # get width and height from cv2 image
+        h, w = cv2_img.shape[:2]
         newW, newH = int(scale * w), int(scale * h)
         assert newW > 0 and newH > 0, 'Scale is too small, resized images would have no pixel'
-        pil_img = pil_img.resize((newW, newH), resample=Image.NEAREST if is_mask else Image.BICUBIC)
-        img = np.asarray(pil_img)
+        img = cv2.resize(cv2_img, (newW, newH), interpolation=cv2.INTER_NEAREST if is_mask else cv2.INTER_CUBIC)
 
         if is_mask:
             mask = np.zeros((newH, newW), dtype=np.uint8)
@@ -100,8 +82,8 @@ class BasicDataset(Dataset):
 
         assert len(img_file) == 1, f'Either no image or multiple images found for the ID {name}: {img_file}'
         assert len(mask_file) == 1, f'Either no mask or multiple masks found for the ID {name}: {mask_file}'
-        mask = load_image(mask_file[0])
-        img = load_image(img_file[0])
+        mask = self.load_image(mask_file[0])
+        img = self.load_image(img_file[0])
 
         assert img.size == mask.size, \
             f'Image and mask {name} should be the same size, but are {img.size} and {mask.size}'
@@ -113,3 +95,26 @@ class BasicDataset(Dataset):
             'image': torch.as_tensor(img.copy()).float().contiguous(),
             'mask': torch.as_tensor(mask.copy()).long().contiguous()
         }
+    
+    def load_image(self, filename):
+        ext = splitext(filename)[1]
+        if ext == '.npy':
+            np_img = np.load(filename)
+        elif ext in ['.pt', '.pth']:
+            np_img = torch.load(filename).numpy()
+        else:
+            np_img = cv2.imread(str(filename), cv2.IMREAD_GRAYSCALE if self.grayscale else cv2.IMREAD_UNCHANGED)
+        
+        return np_img
+    
+    
+    def unique_mask_values(self, idx, mask_dir, mask_suffix):
+        mask_file = list(mask_dir.glob(idx + mask_suffix + '.*'))[0]
+        mask = np.asarray(self.load_image(mask_file))
+        if mask.ndim == 2:
+            return np.unique(mask)
+        elif mask.ndim == 3:
+            mask = mask.reshape(-1, mask.shape[-1])
+            return np.unique(mask, axis=0)
+        else:
+            raise ValueError(f'Loaded masks should have 2 or 3 dimensions, found {mask.ndim}')

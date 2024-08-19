@@ -13,6 +13,7 @@ from torch import optim
 from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 import cv2
+import numpy as np
 
 from evaluate import evaluate
 from model import UNet
@@ -31,12 +32,14 @@ def log_data_info(dir_img, dir_mask, mask_suffix=''):
     print(f"Number of masks: {len(mask_files)}")
     
 
-    img = cv2.imread(str(img_files[0]))
-    mask = cv2.imread(str(mask_files[0]))
-    print(f"Color mode: {img.shape[2]} channels")
+    img = cv2.imread(str(img_files[0]), cv2.IMREAD_GRAYSCALE)
+    mask = cv2.imread(str(mask_files[0]), cv2.IMREAD_GRAYSCALE)
+    #check if there are 3 dimensions
     print(f"Dimensions: {img.shape[1]} x {img.shape[0]}")
-    print(f"Color mode: {mask.shape[2]} channels")
     print(f"Dimensions: {mask.shape[1]} x {mask.shape[0]}")
+    print(f'Min/Max of Image: {img.min()}/{img.max()}')
+    print(f'Min/Max of Mask: {mask.min()}/{mask.max()}')
+    print(f'Unique values in Mask: {np.unique(mask)}')
     print("--------------------")
 
 
@@ -56,7 +59,7 @@ def train_model(
         gradient_clipping: float = 1.0,
 ):
     # 1. Create dataset
-    dataset = BasicDataset(dir_img, dir_mask, img_scale, mask_suffix='_mask')
+    dataset = BasicDataset(dir_img, dir_mask, img_scale, mask_suffix='_mask', grayscale=True if model.n_channels == 1 else False)
 
     # 2. Split into train / validation partitions
     n_val = int(len(dataset) * val_percent)
@@ -84,7 +87,7 @@ def train_model(
     optimizer = optim.RMSprop(model.parameters(),
                               lr=learning_rate, weight_decay=weight_decay, momentum=momentum, foreach=True)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max', patience=5)  # goal: maximize Dice score
-    grad_scaler = torch.cuda.amp.GradScaler(enabled=amp)
+    grad_scaler = torch.GradScaler("cuda" if device.type == 'cuda' else "cpu", enabled=amp)
     criterion = nn.CrossEntropyLoss() if model.n_classes > 1 else nn.BCEWithLogitsLoss()
     global_step = 0
 
@@ -104,7 +107,7 @@ def train_model(
                 images = images.to(device=device, dtype=torch.float32, memory_format=torch.channels_last)
                 true_masks = true_masks.to(device=device, dtype=torch.long)
 
-                with torch.autocast(device.type if device.type != 'mps' else 'cpu', enabled=amp):
+                with torch.autocast("cuda" if device.type == 'cuda' else "cpu", enabled=amp):
                     masks_pred = model(images)
                     if model.n_classes == 1:
                         loss = criterion(masks_pred.squeeze(1), true_masks.float())
@@ -164,7 +167,7 @@ def get_args():
                         help='Percent of the data that is used as validation (0-100)')
     parser.add_argument('--amp', action='store_true', default=False, help='Use mixed precision')
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
-    parser.add_argument('--classes', '-c', type=int, default=1, help='Number of classes')
+    parser.add_argument('--classes', '-c', type=int, default=3, help='Number of classes')
 
     return parser.parse_args()
 
