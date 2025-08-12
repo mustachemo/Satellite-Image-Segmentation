@@ -20,8 +20,8 @@ This repository contains experiments and implementations for uncertainty quantif
 Clone the repository:
 
 ```bash
-git clone https://github.com/mustachemo/Turion-Space-assessment.git
-cd Turion-Space-assessment
+git clone https://github.com/mustachemo/Satellite-Image-Segmentation.git
+cd Satellite-Image-Segmentation
 ```
 
 Install the dependencies:
